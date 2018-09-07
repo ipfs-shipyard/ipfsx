@@ -9,6 +9,8 @@ module.exports = async (opts) => {
 
   const api = {
     add: require('./add')(backend),
+    cat: require('./cat')(backend),
+    start: require('./start')(backend),
     stop: require('./stop')(backend)
   }
 
