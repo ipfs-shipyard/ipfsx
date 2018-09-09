@@ -1,18 +1,28 @@
-const IPFS = require('ipfs')
 const log = require('debug')('ipfsx')
 
-module.exports = async (opts) => {
-  opts = opts || {}
-
-  const backend = new IPFS(opts)
-  backend.on('error', log)
-
+module.exports = async backend => {
   const api = {
     add: require('./add')(backend),
     cat: require('./cat')(backend),
     start: require('./start')(backend),
     stop: require('./stop')(backend)
   }
+
+  // Backend is IpfsApi
+  if (!backend.libp2p) {
+    log('backend is IPFS API')
+    return api
+  }
+
+  backend.on('error', log)
+
+  // Already ready?
+  if (backend.isOnline()) {
+    log('backend is ready')
+    return api
+  }
+
+  log('waiting for backend to be ready')
 
   return new Promise((resolve, reject) => {
     const onError = err => {

@@ -6,8 +6,9 @@
 
 ```js
 import ipfsx from 'ipfsx'
+import IPFS from 'ipfs' // N.B. also works with ipfs-api!
 
-const node = await ipfsx(/* options */)
+const node = await ipfsx(new IPFS)
 
 // IPFS node now ready to use, see API below
 ```

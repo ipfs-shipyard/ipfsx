@@ -1,23 +1,53 @@
 const CID = require('cids')
+const toPull = require('async-iterator-to-pull-stream')
+const pull = require('pull-stream')
+const log = require('debug')('ipfsx:add')
 const { isString } = require('./util/type')
 
 module.exports = backend => {
   return async function add (input, options) {
     input = toIterator(input)
 
-    // TODO: stream don't buffer
-    let chunks = Buffer.alloc(0)
-    let chunkCount = 0
+    const first = await input.next()
+    if (first.done) return []
 
-    // TODO: allow objects
-    for await (let chunk of input) {
-      chunkCount++
-      chunks = Buffer.concat([chunks, chunk])
+    let source
+
+    if (Buffer.isBuffer(first.value)) {
+      log('first value is buffer')
+
+      const iterator = async function * () {
+        yield first.value
+        for await (let chunk of input)
+          yield chunk
+      }
+
+      source = pull.values([{ content: toPull(iterator()) }])
+    } else if (first.value && first.value.content) {
+      log('first value is object')
+
+      const iterator = async function * () {
+        yield { ...first, content: toPull(toIterator(first.value.content)) }
+        for await (let chunk of input)
+          yield { ...chunk, content: toPull(toIterator(chunk.content)) }
+      }
+
+      source = toPull(iterator())
+    } else {
+      throw new Error('invalid input')
     }
 
-    let output = await backend.files.add(chunks)
-    output = output.map(({ path, hash }) => ({ path, cid: new CID(hash) }))
-    return output.length > 1 ? output : output[0]
+    return new Promise((resolve, reject) => {
+      pull(
+        source,
+        backend.files.addPullStream(options),
+        pull.map(({ path, hash }) => ({ path, cid: new CID(hash) })),
+        pull.collect((err, output) => {
+          if (err) return reject(err)
+          resolve(output.length > 1 ? output : output[0])
+        })
+      )
+    })
   }
 }
 
