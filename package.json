@@ -4,9 +4,10 @@
   "description": "Experimental IPFS API",
   "main": "src/index.js",
   "scripts": {
-    "test": "run-p --race test:*",
+    "lint": "standard",
+    "test": "npm run lint && run-p --race test:*",
     "test:portservice": "node test/helpers/port-service/bin",
-    "test:runner": "ava"
+    "test:runner": "ava --verbose"
   },
   "author": "Alan Shaw",
   "license": "MIT",
@@ -18,6 +19,7 @@
   },
   "devDependencies": {
     "ava": "^1.0.0-beta.8",
+    "babel-eslint": "^9.0.0",
     "deepmerge": "^2.1.1",
     "get-port": "^4.0.0",
     "got": "^9.2.1",
@@ -31,6 +33,7 @@
     "pull-stream": "^3.6.9",
     "rmfr": "^2.0.0",
     "shortid": "^2.2.13",
+    "standard": "^12.0.1",
     "underscore": "^1.9.1"
   },
   "peerDependencies": {
@@ -39,5 +42,8 @@
   "ava": {
     "babel": false,
     "compileEnhancements": false
+  },
+  "standard": {
+    "parser": "babel-eslint"
   }
 }

@@ -18,8 +18,9 @@ module.exports = backend => {
 
       const iterator = async function * () {
         yield first.value
-        for await (let chunk of input)
+        for await (let chunk of input) {
           yield chunk
+        }
       }
 
       source = pull.values([{ content: toPull(iterator()) }])
@@ -28,8 +29,9 @@ module.exports = backend => {
 
       const iterator = async function * () {
         yield { ...first, content: toPull(toIterator(first.value.content)) }
-        for await (let chunk of input)
+        for await (let chunk of input) {
           yield { ...chunk, content: toPull(toIterator(chunk.content)) }
+        }
       }
 
       source = toPull(iterator())
@@ -53,11 +55,11 @@ module.exports = backend => {
 
 function toIterator (input) {
   if (Buffer.isBuffer(input)) {
-    return function * () { yield input }()
+    return (function * () { yield input })()
   }
 
   if (isString(input)) {
-    return function * () { yield Buffer.from(input) }()
+    return (function * () { yield Buffer.from(input) })()
   }
 
   if (input[Symbol.iterator] || input[Symbol.asyncIterator]) {
