@@ -1,5 +1,7 @@
 # ipfx
 
+[![Build Status](https://travis-ci.org/alanshaw/ipfsx.svg?branch=master)](https://travis-ci.org/alanshaw/ipfsx) [![dependencies Status](https://david-dm.org/alanshaw/ipfsx/status.svg)](https://david-dm.org/alanshaw/ipfsx)
+
 > Experimental IPFS API
 
 ## Usage
@@ -50,3 +52,11 @@ for await (const chunk of item.content()) {
   data = Buffer.concat(data, chunk)
 }
 ```
+
+## Contribute
+
+Feel free to dive in! [Open an issue](https://github.com/alanshaw/ipfsx/issues/new) or submit PRs.
+
+## License
+
+[MIT](LICENSE) © Alan Shaw
