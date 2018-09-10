@@ -62,7 +62,7 @@ function toIterator (input) {
     return (function * () { yield Buffer.from(input) })()
   }
 
-  if (input[Symbol.iterator] || input[Symbol.asyncIterator]) {
+  if (input && (input[Symbol.iterator] || input[Symbol.asyncIterator])) {
     return input
   }
 

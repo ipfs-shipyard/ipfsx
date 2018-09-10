@@ -139,23 +139,20 @@ test('should add from async iterator of objects of iterator', async t => {
   }
 })
 
-test.skip('should add from async iterator of objects of async iterator', async t => {
+test('should add from async iterator of objects of async iterator', async t => {
   const { node } = t.context
-  let totalContent = 0
+
   const data = randomDirectory({
     createContent: () => {
       const content = randomArray(1, 100, () => randomBytes(randomInteger(1, 64)))
-      totalContent += content.reduce((total, b) => total + b.length, 0)
       const iterator = async function * () {
-        for (let i = 0; i < data.length; i++) {
+        for (let i = 0; i < content.length; i++) {
           yield await pause(randomInteger(1, 10), content[i])
         }
       }
       return iterator()
     }
   })
-
-  console.log('MIGHT NOT PASS, ADDING', (totalContent / 1024) + 'MB')
 
   const iterator = async function * () {
     for (let i = 0; i < data.length; i++) {
