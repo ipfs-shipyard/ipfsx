@@ -2,7 +2,7 @@ const CID = require('cids')
 const toPull = require('async-iterator-to-pull-stream')
 const pull = require('pull-stream')
 const log = require('debug')('ipfsx:add')
-const { isString } = require('./util/type')
+const { isString, isIterable, isIterator } = require('./util/type')
 
 module.exports = backend => {
   return async function add (input, options) {
@@ -20,6 +20,17 @@ module.exports = backend => {
         yield first.value
         for await (let chunk of input) {
           yield chunk
+        }
+      }
+
+      source = pull.values([{ content: toPull(iterator()) }])
+    } else if (isString(first.value)) {
+      log('first value is string')
+
+      const iterator = async function * () {
+        yield Buffer.from(first.value)
+        for await (let chunk of input) {
+          yield Buffer.from(chunk)
         }
       }
 
@@ -62,8 +73,18 @@ function toIterator (input) {
     return (function * () { yield Buffer.from(input) })()
   }
 
-  if (input && (input[Symbol.iterator] || input[Symbol.asyncIterator])) {
+  if (isIterator(input)) {
     return input
+  }
+
+  if (isIterable(input)) {
+    return input[Symbol.iterator]
+      ? input[Symbol.iterator]()
+      : input[Symbol.asyncIterator]()
+  }
+
+  if (input && input.content) {
+    return (function * () { yield input })()
   }
 
   throw new Error('invalid input')

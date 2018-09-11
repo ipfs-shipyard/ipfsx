@@ -3,8 +3,8 @@ const { randomBytes } = require('crypto')
 const ipfsx = require('./helpers/ipfsx')
 const { randomInteger } = require('./helpers/random')
 
-test.beforeEach(async t => { t.context.node = await ipfsx() })
-test.afterEach.always(t => t.context.node.stop())
+test.before(async t => { t.context.node = await ipfsx() })
+test.after.always(t => t.context.node.stop())
 
 test('should cat', async t => {
   const { node } = t.context

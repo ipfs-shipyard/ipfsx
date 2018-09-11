@@ -6,8 +6,8 @@ const ipfsx = require('./helpers/ipfsx')
 const { randomInteger, randomArray, randomDirectory } = require('./helpers/random')
 const { pause } = require('./helpers/async')
 
-test.beforeEach(async t => { t.context.node = await ipfsx() })
-test.afterEach.always(t => t.context.node.stop())
+test.before(async t => { t.context.node = await ipfsx() })
+test.after.always(t => t.context.node.stop())
 
 test('should add from buffer', async t => {
   const { node } = t.context
@@ -20,6 +20,108 @@ test('should add from buffer', async t => {
 test('should add from string', async t => {
   const { node } = t.context
   const data = randomBytes(randomInteger(1, 256)).toString('hex')
+  const { cid, path } = await node.add(data)
+  t.true(CID.isCID(cid))
+  t.true(isString(path))
+})
+
+test('should add from iterable of buffer', async t => {
+  const { node } = t.context
+  const data = randomArray(1, 100, () => randomBytes(randomInteger(1, 64)))
+  const { cid, path } = await node.add(data)
+  t.true(CID.isCID(cid))
+  t.true(isString(path))
+})
+
+test('should add from iterable of string', async t => {
+  const { node } = t.context
+  const data = randomArray(1, 100, () => randomBytes(randomInteger(1, 64)).toString('hex'))
+  const { cid, path } = await node.add(data)
+  t.true(CID.isCID(cid))
+  t.true(isString(path))
+})
+
+test('should add from iterable of object of buffer', async t => {
+  const { node } = t.context
+  const data = randomArray(2, 100, () => randomBytes(randomInteger(1, 64)))
+    .map(chunk => ({ content: chunk }))
+  const res = await node.add(data)
+  t.true(Array.isArray(res))
+  res.forEach(({ cid, path }) => {
+    t.true(CID.isCID(cid))
+    t.true(isString(path))
+  })
+})
+
+test('should add from iterable of object of string', async t => {
+  const { node } = t.context
+  const data = randomArray(2, 100, () => randomBytes(randomInteger(1, 64)))
+    .map(chunk => ({ content: chunk.toString('hex') }))
+  const res = await node.add(data)
+  t.true(Array.isArray(res))
+  res.forEach(({ cid, path }) => {
+    t.true(CID.isCID(cid))
+    t.true(isString(path))
+  })
+})
+
+test('should add from iterable of object of iterator', async t => {
+  const { node } = t.context
+  const data = randomArray(2, 100, () => randomBytes(randomInteger(1, 64)))
+    .map(chunk => ({ content: (function * () { yield chunk })() }))
+  const res = await node.add(data)
+  t.true(Array.isArray(res))
+  res.forEach(({ cid, path }) => {
+    t.true(CID.isCID(cid))
+    t.true(isString(path))
+  })
+})
+
+test('should add from iterable of object of iterable', async t => {
+  const { node } = t.context
+  const data = randomArray(2, 100, () => randomBytes(randomInteger(1, 64)))
+    .map(chunk => ({ content: [chunk] }))
+  const res = await node.add(data)
+  t.true(Array.isArray(res))
+  res.forEach(({ cid, path }) => {
+    t.true(CID.isCID(cid))
+    t.true(isString(path))
+  })
+})
+
+test('should add from object of buffer', async t => {
+  const { node } = t.context
+  const data = { content: randomBytes(randomInteger(1, 64)) }
+  const { cid, path } = await node.add(data)
+  t.true(CID.isCID(cid))
+  t.true(isString(path))
+})
+
+test('should add from object of string', async t => {
+  const { node } = t.context
+  const data = { content: randomBytes(randomInteger(1, 64)).toString('hex') }
+  const { cid, path } = await node.add(data)
+  t.true(CID.isCID(cid))
+  t.true(isString(path))
+})
+
+test('should add from object of iterator', async t => {
+  const { node } = t.context
+  const data = {
+    content: (function * () {
+      yield randomBytes(randomInteger(1, 64))
+    })()
+  }
+  const { cid, path } = await node.add(data)
+  t.true(CID.isCID(cid))
+  t.true(isString(path))
+})
+
+test('should add from object of iterable', async t => {
+  const { node } = t.context
+  const data = {
+    content: randomArray(1, 100, () => randomBytes(randomInteger(1, 64)))
+  }
   const { cid, path } = await node.add(data)
   t.true(CID.isCID(cid))
   t.true(isString(path))

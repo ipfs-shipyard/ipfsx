@@ -7,7 +7,7 @@
     "lint": "standard",
     "test": "npm run lint && run-p --race test:*",
     "test:portservice": "node test/helpers/port-service/bin",
-    "test:runner": "ava --verbose"
+    "test:runner": "nyc --reporter=lcov --reporter=text ava --verbose"
   },
   "author": "Alan Shaw",
   "license": "MIT",
@@ -21,7 +21,6 @@
     "ava": "^1.0.0-beta.8",
     "babel-eslint": "^9.0.0",
     "deepmerge": "^2.1.1",
-    "get-port": "^4.0.0",
     "got": "^9.2.1",
     "ipfs": "^0.31.7",
     "multiaddr": "^5.0.0",
@@ -41,7 +40,8 @@
   },
   "ava": {
     "babel": false,
-    "compileEnhancements": false
+    "compileEnhancements": false,
+    "failWithoutAssertions": false
   },
   "standard": {
     "parser": "babel-eslint"
