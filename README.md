@@ -59,14 +59,14 @@ const node = await ipfsx(new IPFS(/* options */))
 
 | Name | Type | Description |
 |------|------|-------------|
-| input | `Buffer|String|Object<{content, path?}>|Iterable|Iterator` | Input files/data |
+| input | `Buffer\|String\|Object<{content, path?}>\|Iterable\|Iterator` | Input files/data |
 | options | `Object` | (optional) options |
 
 ##### Returns
 
 | Type | Description |
 |------|-------------|
-| `Promise<{cid,path}|Array<{cid,path}>>` | Content IDs and paths of added files/data |
+| `Promise<{cid,path}\|Array<{cid,path}>>` | Content IDs and paths of added files/data |
 
 ##### Example
 
@@ -118,7 +118,7 @@ NOTE: if you have pull stream inputs, you can use [pull-stream-to-async-iterator
 
 | Name | Type | Description |
 |------|------|-------------|
-| path | `String|CID` | IPFS path or CID to cat data from |
+| path | `String\|CID` | IPFS path or CID to cat data from |
 | options | `Object` | (optional) options |
 
 ##### Returns
