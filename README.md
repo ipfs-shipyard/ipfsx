@@ -105,7 +105,7 @@ const node = await ipfsx(new IPFS(/* options */))
 
 | Type | Description |
 |------|-------------|
-| `Iterator<{cid<CID>,path<String>}>>` | Content IDs and paths of added files/data |
+| `Iterator<{cid<CID>,path<String>}>>` | Iterator of content IDs and paths of added files/data |
 
 ##### Example
 
