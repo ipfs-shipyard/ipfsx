@@ -1,70 +1,64 @@
 const CID = require('cids')
 const toPull = require('async-iterator-to-pull-stream')
+const toIterator = require('pull-stream-to-async-iterator')
 const pull = require('pull-stream')
 const log = require('debug')('ipfsx:add')
 const { isString, isIterable, isIterator } = require('./util/type')
 
 module.exports = backend => {
-  return async function add (input, options) {
-    input = toIterator(input)
+  return function add (input, options) {
+    input = toInputIterator(input)
 
-    const first = await input.next()
-    if (first.done) return []
+    const inputIterator = async function * () {
+      const first = await input.next()
+      if (first.done) return
 
-    let source
+      if (Buffer.isBuffer(first.value)) {
+        log('first value is buffer')
 
-    if (Buffer.isBuffer(first.value)) {
-      log('first value is buffer')
-
-      const iterator = async function * () {
-        yield first.value
-        for await (let chunk of input) {
-          yield chunk
+        const contentIterator = async function * () {
+          yield first.value
+          for await (let chunk of input) {
+            yield chunk
+          }
         }
-      }
 
-      source = pull.values([{ content: toPull(iterator()) }])
-    } else if (isString(first.value)) {
-      log('first value is string')
+        yield { content: toPull(contentIterator()) }
+      } else if (isString(first.value)) {
+        log('first value is string')
 
-      const iterator = async function * () {
-        yield Buffer.from(first.value)
-        for await (let chunk of input) {
-          yield Buffer.from(chunk)
+        const contentIterator = async function * () {
+          yield Buffer.from(first.value)
+          for await (let chunk of input) {
+            yield Buffer.from(chunk)
+          }
         }
-      }
 
-      source = pull.values([{ content: toPull(iterator()) }])
-    } else if (first.value && first.value.content) {
-      log('first value is object')
+        yield { content: toPull(contentIterator()) }
+      } else if (first.value && first.value.content) {
+        log('first value is object')
 
-      const iterator = async function * () {
-        yield { ...first, content: toPull(toIterator(first.value.content)) }
+        yield { ...first, content: toPull(toInputIterator(first.value.content)) }
+
         for await (let chunk of input) {
-          yield { ...chunk, content: toPull(toIterator(chunk.content)) }
+          yield { ...chunk, content: toPull(toInputIterator(chunk.content)) }
         }
+      } else {
+        throw new Error('invalid input')
       }
-
-      source = toPull(iterator())
-    } else {
-      throw new Error('invalid input')
     }
 
-    return new Promise((resolve, reject) => {
+    return toIterator(
       pull(
-        source,
+        toPull(inputIterator()),
         backend.files.addPullStream(options),
-        pull.map(({ path, hash }) => ({ path, cid: new CID(hash) })),
-        pull.collect((err, output) => {
-          if (err) return reject(err)
-          resolve(output.length > 1 ? output : output[0])
-        })
+        pull.map(({ path, hash }) => ({ path, cid: new CID(hash) }))
       )
-    })
+    )
   }
 }
 
-function toIterator (input) {
+function toInputIterator (input) {
   if (Buffer.isBuffer(input)) {
     return (function * () { yield input })()
   }

@@ -9,7 +9,7 @@ test.after.always(t => t.context.node.stop())
 test('should cat', async t => {
   const { node } = t.context
   const input = randomBytes(randomInteger(1, 256))
-  const { cid } = await node.add(input)
+  const { cid } = (await node.add(input).next()).value
   let output = Buffer.alloc(0)
   for await (const chunk of node.cat(cid)) {
     output = Buffer.concat([output, chunk])

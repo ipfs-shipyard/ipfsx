@@ -105,25 +105,31 @@ const node = await ipfsx(new IPFS(/* options */))
 
 | Type | Description |
 |------|-------------|
-| `Promise<{cid,path}\|Array<{cid,path}>>` | Content IDs and paths of added files/data |
+| `Iterator<{cid<CID>,path<String>}>>` | Content IDs and paths of added files/data |
 
 ##### Example
 
 Add a string/buffer/object:
 
 ```js
-const { cid } = await ipfsx.add('hello world')
-console.log(cid)
+const adder = ipfsx.add('hello world')
+
+for await (const res of adder)
+  console.log(res.cid)
 ```
 
 ```js
-const { cid } = await ipfsx.add(Buffer.from('hello world'))
-console.log(cid)
+const adder = ipfsx.add(Buffer.from('hello world'))
+
+for await (const res of adder)
+  console.log(res.cid)
 ```
 
 ```js
-const { cid } = await ipfsx.add({ content: Buffer.from('hello world') })
-console.log(cid)
+const adder = ipfsx.add({ content: Buffer.from('hello world') })
+
+for await (const res of adder)
+  console.log(res.cid)
 ```
 
 Add an (async) iterable/iterator:
@@ -131,20 +137,25 @@ Add an (async) iterable/iterator:
 ```js
 // Adding multiple files
 // Note: fs.createReadStream is an ASYNC iterator!
-const res = await ipfsx.add([
+const adder = ipfsx.add([
   { path: 'root/file1', content: fs.createReadStream(/*...*/) },
   { path: 'root/file2', content: fs.createReadStream(/*...*/) }
 ])
-res.forEach(({ cid, path }) => console.log(cid, path))
+
+for await (const res of adder)
+  console.log(res.cid, res.path)
 ```
 
 ```js
 // Single file, regular iterator
 const iterator = function * () {
-  for (let i = 0; i < 10; i++) yield crypto.randomBytes()
+  for (let i = 0; i < 10; i++)
+    yield crypto.randomBytes()
 }
-const res = await ipfsx.add(iterator())
-res.forEach(({ cid, path }) => console.log(cid, path))
+const adder = ipfsx.add(iterator())
+
+for await (const res of adder)
+  console.log(res.cid, res.path)
 ```
 
 NOTE: if you have pull stream inputs, you can use [pull-stream-to-async-iterator](https://github.com/alanshaw/pull-stream-to-async-iterator) to convert them :D
