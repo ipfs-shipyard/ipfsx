@@ -85,8 +85,8 @@ import IPFS from 'ipfs' // N.B. also works with ipfs-api!
 
 const node = await ipfsx(new IPFS(/* options */))
 
-// await node.add(...)
-// await node.cat(...)
+// node.add(...)
+// node.cat(...)
 // etc...
 ```
 
