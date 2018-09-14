@@ -69,7 +69,7 @@ const node = await ipfsx(new IPFS)
 
 | Name | Type | Description |
 |------|------|-------------|
-| backend | `Ipfs|IpfsApi` | Backing ipfs core interface to use |
+| backend | `Ipfs\|IpfsApi` | Backing ipfs core interface to use |
 
 ##### Returns
 
