@@ -105,31 +105,25 @@ const node = await ipfsx(new IPFS(/* options */))
 
 | Type | Description |
 |------|-------------|
-| `Iterator<{cid<CID>,path<String>}>>` | Iterator of content IDs and paths of added files/data |
+| `Iterator<{cid<CID>,path<String>}>>` | Iterator of content IDs and paths of added files/data. It has an async `first()` and `last()` function for returning just the first/last item. |
 
 ##### Example
 
 Add a string/buffer/object:
 
 ```js
-const adder = ipfsx.add('hello world')
-
-for await (const res of adder)
-  console.log(res.cid)
+const { cid } = await ipfsx.add('hello world').first()
+console.log(cid)
 ```
 
 ```js
-const adder = ipfsx.add(Buffer.from('hello world'))
-
-for await (const res of adder)
-  console.log(res.cid)
+const { cid } = await ipfsx.add(Buffer.from('hello world')).first()
+console.log(cid)
 ```
 
 ```js
-const adder = ipfsx.add({ content: Buffer.from('hello world') })
-
-for await (const res of adder)
-  console.log(res.cid)
+const { cid } = await ipfsx.add({ content: Buffer.from('hello world') }).first()
+console.log(cid)
 ```
 
 Add an (async) iterable/iterator:
@@ -152,10 +146,9 @@ const iterator = function * () {
   for (let i = 0; i < 10; i++)
     yield crypto.randomBytes()
 }
-const adder = ipfsx.add(iterator())
 
-for await (const res of adder)
-  console.log(res.cid, res.path)
+const { cid } = await ipfsx.add(iterator()).first()
+console.log(cid)
 ```
 
 NOTE: if you have pull stream inputs, you can use [pull-stream-to-async-iterator](https://github.com/alanshaw/pull-stream-to-async-iterator) to convert them :D
@@ -180,7 +173,7 @@ NOTE: if you have pull stream inputs, you can use [pull-stream-to-async-iterator
 ##### Example
 
 ```js
-const { cid } = await ipfsx.add('hello world')
+const { cid } = await ipfsx.add('hello world').first()
 
 let data = Buffer.alloc(0)
 

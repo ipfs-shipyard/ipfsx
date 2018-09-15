@@ -289,3 +289,19 @@ test('should add from async iterator of objects of async iterator', async t => {
     t.is(res.length, 0)
   }
 })
+
+test('should add and take first', async t => {
+  const { node } = t.context
+  const data = randomBytes(randomInteger(1, 256))
+  const { cid, path } = await node.add(data).first()
+  t.true(CID.isCID(cid))
+  t.true(isString(path))
+})
+
+test('should add and take last', async t => {
+  const { node } = t.context
+  const data = randomBytes(randomInteger(1, 256))
+  const { cid, path } = await node.add(data).last()
+  t.true(CID.isCID(cid))
+  t.true(isString(path))
+})
