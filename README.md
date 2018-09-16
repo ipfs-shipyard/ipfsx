@@ -101,7 +101,7 @@ const node = await ipfsx(new IPFS(/* options */))
 
 | Name | Type | Description |
 |------|------|-------------|
-| input | `Buffer`\|`String`\|`Object<{content, path?}>``\|`Iterable`\|`Iterator` | Input files/data |
+| input | `Buffer`\|`String`\|`Object<{content, path?}>`\|`Iterable`\|`Iterator` | Input files/data |
 | options | `Object` | (optional) options |
 
 ##### Returns
