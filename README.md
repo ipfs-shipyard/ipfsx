@@ -72,7 +72,7 @@ const node = await ipfsx(new IPFS)
 
 | Name | Type | Description |
 |------|------|-------------|
-| backend | `Ipfs\|IpfsApi` | Backing ipfs core interface to use |
+| backend | `Ipfs`\|`IpfsApi` | Backing ipfs core interface to use |
 
 ##### Returns
 
@@ -101,14 +101,14 @@ const node = await ipfsx(new IPFS(/* options */))
 
 | Name | Type | Description |
 |------|------|-------------|
-| input | `Buffer\|String\|Object<{content, path?}>\|Iterable\|Iterator` | Input files/data |
+| input | `Buffer`\|`String`\|`Object<{content, path?}>``\|`Iterable`\|`Iterator` | Input files/data |
 | options | `Object` | (optional) options |
 
 ##### Returns
 
 | Type | Description |
 |------|-------------|
-| `Iterator<{cid<[CID](https://www.npmjs.com/package/cids)>,path<String>}>>` | Iterator of content IDs and paths of added files/data. It has an async `first()` and `last()` function for returning just the first/last item. |
+| `Iterator<{cid<CID>,path<String>}>` | Iterator of content IDs and paths of added files/data. It has an async `first()` and `last()` function for returning just the first/last item. |
 
 ##### Example
 
@@ -164,7 +164,7 @@ NOTE: if you have pull stream inputs, you can use [pull-stream-to-async-iterator
 
 | Name | Type | Description |
 |------|------|-------------|
-| path | `String\|[CID](https://www.npmjs.com/package/cids)` | IPFS path or CID to cat data from |
+| path | `String`\|[CID](https://www.npmjs.com/package/cids) | IPFS path or CID to cat data from |
 | options | `Object` | (optional) options |
 
 ##### Returns
@@ -195,13 +195,13 @@ console.log(data.toString()) // hello world
 
 | Name | Type | Description |
 |------|------|-------------|
-| cid | `[CID](https://www.npmjs.com/package/cids)` | CID of block to get |
+| cid | [CID](https://www.npmjs.com/package/cids) | CID of block to get |
 
 ##### Returns
 
 | Type | Description |
 |------|-------------|
-| `[Block](https://www.npmjs.com/package/ipfs-block)` | Raw IPFS block |
+| [Block](https://www.npmjs.com/package/ipfs-block) | Raw IPFS block |
 
 ##### Example
 
@@ -222,7 +222,7 @@ console.log(block.data) // buffer containing block data
 
 | Name | Type | Description |
 |------|------|-------------|
-| data | `Buffer\|[Block](https://www.npmjs.com/package/ipfs-block)`\|Iterable\|Iterator | Block data or block itself to store |
+| data | `Buffer`\|[Block](https://www.npmjs.com/package/ipfs-block)\|`Iterable`\|`Iterator` | Block data or block itself to store |
 | options | `Object` | (optional) options |
 | options.TODO | | |
 
@@ -230,7 +230,7 @@ console.log(block.data) // buffer containing block data
 
 | Type | Description |
 |------|-------------|
-| `[Block](https://www.npmjs.com/package/ipfs-block)` | Raw IPFS block |
+| [Block](https://www.npmjs.com/package/ipfs-block) | Raw IPFS block |
 
 ##### Example
 
