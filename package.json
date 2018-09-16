@@ -24,6 +24,7 @@
     "deepmerge": "^2.1.1",
     "got": "^9.2.1",
     "ipfs": "^0.31.7",
+    "js-unixfsv2-draft": "^0.2.0",
     "multiaddr": "^5.0.0",
     "multiaddr-to-uri": "^4.0.0",
     "npm-run-all": "^4.1.3",

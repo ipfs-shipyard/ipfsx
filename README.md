@@ -78,7 +78,7 @@ const node = await ipfsx(new IPFS)
 
 | Type | Description |
 |------|-------------|
-| `Promise<IpfsxApi>` | An ipfsx API |
+| `Promise<Node>` | An ipfsx node |
 
 ##### Example
 
@@ -95,7 +95,7 @@ const node = await ipfsx(new IPFS(/* options */))
 
 ### add
 
-#### `ipfsx.add(input, [options])`
+#### `node.add(input, [options])`
 
 ##### Parameters
 
@@ -108,24 +108,24 @@ const node = await ipfsx(new IPFS(/* options */))
 
 | Type | Description |
 |------|-------------|
-| `Iterator<{cid<CID>,path<String>}>>` | Iterator of content IDs and paths of added files/data. It has an async `first()` and `last()` function for returning just the first/last item. |
+| `Iterator<{cid<[CID](https://www.npmjs.com/package/cids)>,path<String>}>>` | Iterator of content IDs and paths of added files/data. It has an async `first()` and `last()` function for returning just the first/last item. |
 
 ##### Example
 
 Add a string/buffer/object:
 
 ```js
-const { cid } = await ipfsx.add('hello world').first()
+const { cid } = await node.add('hello world').first()
 console.log(cid)
 ```
 
 ```js
-const { cid } = await ipfsx.add(Buffer.from('hello world')).first()
+const { cid } = await node.add(Buffer.from('hello world')).first()
 console.log(cid)
 ```
 
 ```js
-const { cid } = await ipfsx.add({ content: Buffer.from('hello world') }).first()
+const { cid } = await node.add({ content: Buffer.from('hello world') }).first()
 console.log(cid)
 ```
 
@@ -134,7 +134,7 @@ Add an (async) iterable/iterator:
 ```js
 // Adding multiple files
 // Note: fs.createReadStream is an ASYNC iterator!
-const adder = ipfsx.add([
+const adder = node.add([
   { path: 'root/file1', content: fs.createReadStream(/*...*/) },
   { path: 'root/file2', content: fs.createReadStream(/*...*/) }
 ])
@@ -150,7 +150,7 @@ const iterator = function * () {
     yield crypto.randomBytes()
 }
 
-const { cid } = await ipfsx.add(iterator()).first()
+const { cid } = await node.add(iterator()).first()
 console.log(cid)
 ```
 
@@ -158,13 +158,13 @@ NOTE: if you have pull stream inputs, you can use [pull-stream-to-async-iterator
 
 ### cat
 
-#### `ipfsx.cat(path, [options])`
+#### `node.cat(path, [options])`
 
 ##### Parameters
 
 | Name | Type | Description |
 |------|------|-------------|
-| path | `String\|CID` | IPFS path or CID to cat data from |
+| path | `String\|[CID](https://www.npmjs.com/package/cids)` | IPFS path or CID to cat data from |
 | options | `Object` | (optional) options |
 
 ##### Returns
@@ -176,11 +176,11 @@ NOTE: if you have pull stream inputs, you can use [pull-stream-to-async-iterator
 ##### Example
 
 ```js
-const { cid } = await ipfsx.add('hello world').first()
+const { cid } = await node.add('hello world').first()
 
 let data = Buffer.alloc(0)
 
-for await (const chunk of ipfsx.cat(cid, options)) {
+for await (const chunk of node.cat(cid, options)) {
   data = Buffer.concat(data, chunk)
 }
 
@@ -188,8 +188,60 @@ console.log(data.toString()) // hello world
 ```
 
 ### block.get
+
+#### `node.block.get(cid)`
+
+##### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| cid | `[CID](https://www.npmjs.com/package/cids)` | CID of block to get |
+
+##### Returns
+
+| Type | Description |
+|------|-------------|
+| `[Block](https://www.npmjs.com/package/ipfs-block)` | Raw IPFS block |
+
+##### Example
+
+```js
+const cid = new CID('zdpuAtpzCB7ma5zNyCN7eh1Vss1dHWuScf91DbE1ix9ZTbjAk')
+const block = await node.block.get(cid)
+
+Block.isBlock(block) // true
+block.cid.equals(cid) // true
+console.log(block.data) // buffer containing block data
+```
+
 ### block.put
+
+#### `node.block.put(data)`
+
+##### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| data | `Buffer\|[Block](https://www.npmjs.com/package/ipfs-block)`\|Iterable\|Iterator | Block data or block itself to store |
+| options | `Object` | (optional) options |
+| options.TODO | | |
+
+##### Returns
+
+| Type | Description |
+|------|-------------|
+| `[Block](https://www.npmjs.com/package/ipfs-block)` | Raw IPFS block |
+
+##### Example
+
+```js
+const unixfs = require('js-unixfsv2-draft')
+const block = await node.block.put(unixfs.dir(__dirname)).last()
+```
+
 ### block.stat
+
+TODO
 
 ## Contribute
 

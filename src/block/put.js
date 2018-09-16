@@ -1,13 +1,20 @@
 const Block = require('ipfs-block')
+const log = require('debug')('ipfsx:block:put')
 const { isIterable, isIterator } = require('../util/type')
 const { ends } = require('../util/iterator')
 
 module.exports = backend => {
   return function put (input, options) {
     input = toInputIterator(input)
+    options = options || {}
 
     const outputIterator = (async function * () {
       for await (const block of input) {
+        if (Block.isBlock(block)) {
+          log('put', block.cid.toBaseEncodedString(), block.data)
+        } else {
+          log('put', block)
+        }
         yield await backend.block.put(block, options)
       }
     })()
