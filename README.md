@@ -108,7 +108,7 @@ const node = await ipfsx(new IPFS(/* options */))
 
 | Type | Description |
 |------|-------------|
-| `Iterator<{cid<CID>,path<String>}>` | Iterator of content IDs and paths of added files/data. It has an async `first()` and `last()` function for returning just the first/last item. |
+| `Iterator<{cid<`[`CID`](https://www.npmjs.com/package/cids)`>,path<String>}>` | Iterator of content IDs and paths of added files/data. It has an async `first()` and `last()` function for returning just the first/last item. |
 
 ##### Example
 
@@ -230,7 +230,7 @@ console.log(block.data) // buffer containing block data
 
 | Type | Description |
 |------|-------------|
-| [Block](https://www.npmjs.com/package/ipfs-block) | Raw IPFS block |
+| [`Block`](https://www.npmjs.com/package/ipfs-block) | Raw IPFS block |
 
 ##### Example
 
