@@ -164,7 +164,7 @@ NOTE: if you have pull stream inputs, you can use [pull-stream-to-async-iterator
 
 | Name | Type | Description |
 |------|------|-------------|
-| path | `String`\|[CID](https://www.npmjs.com/package/cids) | IPFS path or CID to cat data from |
+| path | `String`\|[`CID`](https://www.npmjs.com/package/cids) | IPFS path or CID to cat data from |
 | options | `Object` | (optional) options |
 
 ##### Returns
@@ -195,13 +195,13 @@ console.log(data.toString()) // hello world
 
 | Name | Type | Description |
 |------|------|-------------|
-| cid | [CID](https://www.npmjs.com/package/cids) | CID of block to get |
+| cid | [`CID`](https://www.npmjs.com/package/cids) | CID of block to get |
 
 ##### Returns
 
 | Type | Description |
 |------|-------------|
-| [Block](https://www.npmjs.com/package/ipfs-block) | Raw IPFS block |
+| [`Block`](https://www.npmjs.com/package/ipfs-block) | Raw IPFS block |
 
 ##### Example
 
@@ -222,7 +222,7 @@ console.log(block.data) // buffer containing block data
 
 | Name | Type | Description |
 |------|------|-------------|
-| data | `Buffer`\|[Block](https://www.npmjs.com/package/ipfs-block)\|`Iterable`\|`Iterator` | Block data or block itself to store |
+| data | `Buffer`\|[`Block`](https://www.npmjs.com/package/ipfs-block)\|`Iterable`\|`Iterator` | Block data or block itself to store |
 | options | `Object` | (optional) options |
 | options.TODO | | |
 
