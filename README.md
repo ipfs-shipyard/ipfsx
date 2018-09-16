@@ -59,6 +59,9 @@ const node = await ipfsx(new IPFS)
 * [Getting started](#getting-started)
 * [`add`](#add)
 * [`cat`](#cat)
+* [`block.get`](#blockget)
+* [`block.put`](#blockput)
+* [`block.stat`](#blockstat)
 * TODO: more to come in upcoming releases!
 
 ### Getting started
@@ -183,6 +186,10 @@ for await (const chunk of ipfsx.cat(cid, options)) {
 
 console.log(data.toString()) // hello world
 ```
+
+### block.get
+### block.put
+### block.stat
 
 ## Contribute
 

@@ -4,7 +4,7 @@ const toIterator = require('pull-stream-to-async-iterator')
 const pull = require('pull-stream')
 const log = require('debug')('ipfsx:add')
 const { isString, isIterable, isIterator } = require('./util/type')
-const { first, last } = require('./util/iterator')
+const { ends } = require('./util/iterator')
 
 module.exports = backend => {
   return function add (input, options) {
@@ -57,10 +57,7 @@ module.exports = backend => {
       )
     )
 
-    outputIterator.first = () => first(outputIterator)
-    outputIterator.last = () => last(outputIterator)
-
-    return outputIterator
+    return ends(outputIterator)
   }
 }
 

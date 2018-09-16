@@ -3,6 +3,11 @@ const log = require('debug')('ipfsx')
 module.exports = async backend => {
   const api = {
     add: require('./add')(backend),
+    block: {
+      add: require('./block/get')(backend),
+      put: require('./block/put')(backend),
+      stat: require('./block/stat')(backend)
+    },
     cat: require('./cat')(backend),
     start: require('./start')(backend),
     stop: require('./stop')(backend)
