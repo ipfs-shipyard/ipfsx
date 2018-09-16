@@ -1,6 +1,6 @@
 const Block = require('ipfs-block')
-const { isIterable, isIterator } = require('./util/type')
-const { ends } = require('./util/iterator')
+const { isIterable, isIterator } = require('../util/type')
+const { ends } = require('../util/iterator')
 
 module.exports = backend => {
   return function put (input, options) {

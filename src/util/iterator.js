@@ -9,7 +9,7 @@ exports.last = async iterator => {
 }
 
 exports.ends = iterator => {
-  iterator.first = exports.first(iterator)
-  iterator.last = exports.last(iterator)
+  iterator.first = () => exports.first(iterator)
+  iterator.last = () => exports.last(iterator)
   return iterator
 }
