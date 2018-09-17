@@ -216,7 +216,7 @@ console.log(block.data) // buffer containing block data
 
 ### block.put
 
-#### `node.block.put(data)`
+#### `node.block.put(data, [options])`
 
 ##### Parameters
 
@@ -224,9 +224,9 @@ console.log(block.data) // buffer containing block data
 |------|------|-------------|
 | data | `Buffer`\|[`Block`](https://www.npmjs.com/package/ipfs-block)\|`Iterable`\|`Iterator` | Block data or block itself to store |
 | options | `Object` | (optional) options (ignored if `data` is a `Block`) |
-| options.cidCodec | `String` | Multicodec name that describes the data, default: 'raw' |
+| options.cidCodec | `String` | [Multicodec name](https://github.com/multiformats/js-multicodec/blob/master/src/base-table.js) that describes the data, default: 'raw' |
 | options.cidVersion | `Number` | Version number of the CID to return, default: 1 |
-| options.hashAlg | `String` | Multihash hashing algorithm name to use, default: 'sha2-256' |
+| options.hashAlg | `String` | [Multihash hashing algorithm name](https://github.com/multiformats/js-multihash/blob/master/src/constants.js) to use, default: 'sha2-256' |
 | options.hashLen | `Number` | Length to truncate the digest to |
 
 ##### Returns
@@ -237,9 +237,23 @@ console.log(block.data) // buffer containing block data
 
 ##### Example
 
+Put single block from buffer of data:
+
+```js
+const data = Buffer.from('hello world')
+const block = await node.block.put(data).first()
+
+Block.isBlock(block) // true
+block.cid.codec // raw
+console.log(block.data.toString()) // hello world
+```
+
+Put an (async) iterable/iterator:
+
 ```js
 const unixfs = require('js-unixfsv2-draft')
 const block = await node.block.put(unixfs.dir(__dirname)).last()
+// Last block is a unixfs2 directory
 ```
 
 ### block.stat
