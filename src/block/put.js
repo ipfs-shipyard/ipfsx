@@ -6,16 +6,23 @@ const { ends } = require('../util/iterator')
 module.exports = backend => {
   return function put (input, options) {
     input = toInputIterator(input)
+    if (options) log(options)
     options = options || {}
 
     const outputIterator = (async function * () {
       for await (const block of input) {
         if (Block.isBlock(block)) {
           log('put', block.cid.toBaseEncodedString(), block.data)
+          yield await backend.block.put(block)
         } else {
           log('put', block)
+          yield await backend.block.put(block, {
+            format: options.cidCodec || 'raw',
+            version: options.cidVersion || 1,
+            mhtype: options.hashAlg || 'sha2-256',
+            mhlen: options.hashLen
+          })
         }
-        yield await backend.block.put(block, options)
       }
     })()
 

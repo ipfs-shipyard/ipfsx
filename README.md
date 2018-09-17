@@ -223,14 +223,17 @@ console.log(block.data) // buffer containing block data
 | Name | Type | Description |
 |------|------|-------------|
 | data | `Buffer`\|[`Block`](https://www.npmjs.com/package/ipfs-block)\|`Iterable`\|`Iterator` | Block data or block itself to store |
-| options | `Object` | (optional) options |
-| options.TODO | | |
+| options | `Object` | (optional) options (ignored if `data` is a `Block`) |
+| options.cidCodec | `String` | Multicodec name that describes the data, default: 'raw' |
+| options.cidVersion | `Number` | Version number of the CID to return, default: 1 |
+| options.hashAlg | `String` | Multihash hashing algorithm name to use, default: 'sha2-256' |
+| options.hashLen | `Number` | Length to truncate the digest to |
 
 ##### Returns
 
 | Type | Description |
 |------|-------------|
-| [`Block`](https://www.npmjs.com/package/ipfs-block) | Raw IPFS block |
+| `Iterator<`[`Block`](https://www.npmjs.com/package/ipfs-block)`>` | Iterator that yields block objects. It has an async `first()` and `last()` function for returning just the first/last item. |
 
 ##### Example
 
