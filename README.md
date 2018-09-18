@@ -114,7 +114,7 @@ const node = await ipfsx(new IPFS(/* options */))
 
 | Type | Description |
 |------|-------------|
-| `Iterator<{cid<`[`CID`](https://www.npmjs.com/package/cids)`>,path<String>}>` | Iterator of content IDs and paths of added files/data. It has an async `first()` and `last()` function for returning just the first/last item. |
+| `Iterator<{cid<`[`CID`](https://www.npmjs.com/package/cids)`>, path<String>}>` | Iterator of content IDs and paths of added files/data. It has an async `first()` and `last()` function for returning just the first/last item. |
 
 ##### Example
 
@@ -274,13 +274,13 @@ console.log(data.toString()) // hello world
 
 | Name | Type | Description |
 |------|------|-------------|
-| path | `String`\|`Buffer`\|[`CID`](https://www.npmjs.com/package/cids) | IPFS path or CID to cat data from |
+| path | `String`\|`Buffer`\|[`CID`](https://www.npmjs.com/package/cids) | IPFS path or CID to get data from |
 
 ##### Returns
 
 | Type | Description |
 |------|-------------|
-| `Iterator<{path<String>, content:<Iterator<Buffer>>}>` | An iterator that can be used to consume all the data |
+| `Iterator<{path<String>, content<Iterator<Buffer>>}>` | An iterator that can be used to consume all the data |
 
 ##### Example
 
