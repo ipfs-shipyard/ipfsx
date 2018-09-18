@@ -15,27 +15,29 @@
 
 ## Background
 
-**!! WIP !!**
-
 JS IPFS supports two types of stream at the API level, but uses pull streams for internals. If I was working on js-ipfs at the time I'd have made the same decision. Since then, async/await became part of the JS language and the majority of JavaScript runtimes now support async/await, async iterators and for/await/of (i.e. no need to transpile). These tools give us the power to stream data without needing to rely on a library.
 
 Just because there are new language features available doesn't mean we should switch to using them. It's a significant upheaval to change the core interface spec and it's implementations (js-ipfs, js-ipfs-api etc.) without good reason. That is why this repository exists: it provides a playground where we can test out new API ideas without having to set them in stone by writing them in the spec.
 
-Part of the reason I'm pro switching to async iterators is because I see parallels between them and pull streams, and I'm super pro pull streams for their simplicity and power.
+The big changes are to switch to async/await syntax and to make use of async iterators in place of Node.js/pull streams. Making use of async/await will likely aid community contributions and adoption of js-ipfs as it will be perceived as being modern, up to date and cutting edge. At least in my experience this is true of the JS community.
 
-Reduction in bundle size - no need to bundle two different stream implementations, and their eco-system helper modules, no need for the `async` module.
+Part of the reason I'm pro switching to async iterators is because I see parallels between them and pull streams, and I'm super pro pull streams for their simplicity and power:
 
-Reduce `npm install` time - fewer dependencies to install.
+* Clear story for error propagation and handling
+* Backpressure is built in and easy to implement
+* No complicated internal state that is difficult to understand
 
-Allows us to remove a bunch of plumbing code that converts Node.js streams to pull streams and vice versa.
+There's actually a bunch of other good reasons to switch to async/await and async iterators:
 
-Simplifies the API, no `addPullStream`, `addReadableStream`.
+* Reduction in bundle size - no need to bundle two different stream implementations, and their eco-system helper modules, no need for the `async` module.
+* Reduce `npm install` time - fewer dependencies to install.
+* Allows us to remove a bunch of plumbing code that converts Node.js streams to pull streams and vice versa.
+* Simplifies the API, no `addPullStream`, `addReadableStream`.
+* Building an `interface-ipfs-core` compatible interface becomes a whole lot easier, no dual promise/callback API and no multiple stream implementation variations of the same function. It would also reduce the number of tests in the `interface-ipfs-core` test suite for the same reasons.
+* [Node.js readable streams are now async iterators](https://github.com/nodejs/node/pull/17755)!
+* Of note, it is trivial to convert from [pull stream to (async) iterator](https://github.com/alanshaw/pull-stream-to-async-iterator) [and vice versa](https://github.com/alanshaw/async-iterator-to-pull-stream) and [Node.js streams are now async iterators](http://2ality.com/2018/04/async-iter-nodejs.html).
 
-[Node.js readable streams are now async iterators](https://github.com/nodejs/node/pull/17755)!
-
-Of note, it is trivial to convert from [pull stream to (async) iterator](https://github.com/alanshaw/pull-stream-to-async-iterator) [and vice versa](https://github.com/alanshaw/async-iterator-to-pull-stream) and [Node.js streams are now async iterators](http://2ality.com/2018/04/async-iter-nodejs.html).
-
-Async/await is inevitable for js-ipfs and js-ipfs-api, the CLI tests are already all promise based, when we inevitably upgrade to Hapi 17 the HTTP API will have to become promise based. The whole of the core interface is dual callback/promise based through `promisify`. Maybe it's time to double down on promises?
+Something for your consideration - async/await is inevitable for js-ipfs and js-ipfs-api, the CLI tests are already all promise based, when we inevitably upgrade to Hapi 17 the HTTP API will have to become promise based. The whole of the core interface is dual callback/promise based through `promisify`. Maybe it's time to double down on promises?
 
 ## Install
 
