@@ -9,6 +9,7 @@ module.exports = async backend => {
       stat: require('./block/stat')(backend)
     },
     cat: require('./cat')(backend),
+    get: require('./get')(backend),
     start: require('./start')(backend),
     stop: require('./stop')(backend)
   }

@@ -61,10 +61,13 @@ const node = await ipfsx(new IPFS)
 
 * [Getting started](#getting-started)
 * [`add`](#add)
-* [`cat`](#cat)
 * [`block.get`](#blockget)
 * [`block.put`](#blockput)
 * [`block.stat`](#blockstat)
+* [`cat`](#cat)
+* [`get`](#get)
+* [`start`](#start)
+* [`stop`](#stop)
 * TODO: more to come in upcoming releases!
 
 ### Getting started
@@ -159,37 +162,6 @@ console.log(cid)
 
 NOTE: if you have pull stream inputs, you can use [pull-stream-to-async-iterator](https://github.com/alanshaw/pull-stream-to-async-iterator) to convert them :D
 
-### cat
-
-#### `node.cat(path, [options])`
-
-##### Parameters
-
-| Name | Type | Description |
-|------|------|-------------|
-| path | `String`\|[`CID`](https://www.npmjs.com/package/cids) | IPFS path or CID to cat data from |
-| options | `Object` | (optional) options |
-
-##### Returns
-
-| Type | Description |
-|------|-------------|
-| `Iterator<Buffer>` | An iterator that can be used to consume all the data |
-
-##### Example
-
-```js
-const { cid } = await node.add('hello world').first()
-
-let data = Buffer.alloc(0)
-
-for await (const chunk of node.cat(cid, options)) {
-  data = Buffer.concat(data, chunk)
-}
-
-console.log(data.toString()) // hello world
-```
-
 ### block.get
 
 #### `node.block.get(cid)`
@@ -260,6 +232,105 @@ const block = await node.block.put(unixfs.dir(__dirname)).last()
 ```
 
 ### block.stat
+
+TODO
+
+### cat
+
+#### `node.cat(path, [options])`
+
+##### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| path | `String`\|`Buffer`\|[`CID`](https://www.npmjs.com/package/cids) | IPFS path or CID to cat data from |
+| options | `Object` | (optional) options |
+
+##### Returns
+
+| Type | Description |
+|------|-------------|
+| `Iterator<Buffer>` | An iterator that can be used to consume all the data |
+
+##### Example
+
+```js
+const { cid } = await node.add('hello world').first()
+
+let data = Buffer.alloc(0)
+
+for await (const chunk of node.cat(cid, options)) {
+  data = Buffer.concat([data, chunk])
+}
+
+console.log(data.toString()) // hello world
+```
+
+### get
+
+#### `node.get(path)`
+
+##### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| path | `String`\|`Buffer`\|[`CID`](https://www.npmjs.com/package/cids) | IPFS path or CID to cat data from |
+
+##### Returns
+
+| Type | Description |
+|------|-------------|
+| `Iterator<{path<String>, content:<Iterator<Buffer>>}>` | An iterator that can be used to consume all the data |
+
+##### Example
+
+Get a single file:
+
+```js
+const { cid } = await node.add('hello world').first()
+const file = await node.get(cid).first()
+
+let data = Buffer.alloc(0)
+
+for await (const chunk of file.data) {
+  data = Buffer.concat([data, chunk])
+}
+
+console.log(file.path, data)
+```
+
+Get a directory:
+
+```js
+const { cid } = await node.add([
+  { path: 'root/LICENSE', content: fs.createReadStream('LICENSE') },
+  { path: 'root/README.md', content: fs.createReadStream('README.md') }
+]).last() // last item will be the root directory
+
+for await (const file of node.get(cid)) {
+  console.log('Path:', file.path)
+
+  if (!file.content) continue // Directory has no content
+
+  let data = Buffer.alloc(0)
+
+  for await (const chunk of file.content) {
+    data = Buffer.concat([data, chunk])
+  }
+
+  console.log('Data:', data)
+}
+```
+
+### start
+
+#### `node.start()`
+
+TODO
+
+### stop
+
+#### `node.stop()`
 
 TODO
 
