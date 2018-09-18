@@ -36,6 +36,7 @@ There's actually a bunch of other good reasons to switch to async/await and asyn
 * Building an `interface-ipfs-core` compatible interface becomes a whole lot easier, no dual promise/callback API and no multiple stream implementation variations of the same function. It would also reduce the number of tests in the `interface-ipfs-core` test suite for the same reasons.
 * [Node.js readable streams are now async iterators](https://github.com/nodejs/node/pull/17755)!
 * Of note, it is trivial to convert from [pull stream to (async) iterator](https://github.com/alanshaw/pull-stream-to-async-iterator) [and vice versa](https://github.com/alanshaw/async-iterator-to-pull-stream) and [Node.js streams are now async iterators](http://2ality.com/2018/04/async-iter-nodejs.html).
+* Unhandled throws that cannot be caught will no longer be a problem
 
 Something for your consideration - async/await is inevitable for js-ipfs and js-ipfs-api, the CLI tests are already all promise based, when we inevitably upgrade to Hapi 17 the HTTP API will have to become promise based. The whole of the core interface is dual callback/promise based through `promisify`. Maybe it's time to double down on promises?
 
