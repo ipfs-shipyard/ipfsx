@@ -19,7 +19,7 @@ JS IPFS supports two types of stream at the API level, but uses pull streams for
 
 Just because there are new language features available doesn't mean we should switch to using them. It's a significant upheaval to change the core interface spec and it's implementations (js-ipfs, js-ipfs-api etc.) without good reason. That is why this repository exists: it provides a playground where we can test out new API ideas without having to set them in stone by writing them in the spec.
 
-The big changes are to switch to async/await syntax and to make use of async iterators in place of Node.js/pull streams. Making use of async/await will likely aid community contributions and adoption of js-ipfs as it will be perceived as being modern, up to date and cutting edge. At least in my experience this is true of the JS community.
+The big changes are to switch to async/await syntax and to make use of async iterators in place of Node.js/pull streams. I want JS IPFS to feel modern, up to date and cutting edge and I'm willing to bet that this will aid community contributions and adoption.
 
 Part of the reason I'm pro switching to async iterators is because I see parallels between them and pull streams, and I'm super pro pull streams for their simplicity and power:
 
