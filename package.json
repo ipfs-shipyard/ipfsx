@@ -1,6 +1,6 @@
 {
   "name": "ipfsx",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Experimental IPFS API",
   "main": "src/index.js",
   "scripts": {
