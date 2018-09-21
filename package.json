@@ -7,7 +7,9 @@
     "lint": "standard",
     "test": "npm run lint && run-p --race test:*",
     "test:portservice": "node test/helpers/port-service/bin",
-    "test:runner": "nyc --reporter=lcov --reporter=text ava --verbose"
+    "test:runner": "run-s test:runner:embedded",
+    "test:runner:embedded": "nyc --reporter=lcov --reporter=text ava --verbose",
+    "test:runner:daemon": "IPFS_TYPE=daemon ava --verbose"
   },
   "author": "Alan Shaw",
   "license": "MIT",
@@ -22,8 +24,10 @@
     "ava": "^1.0.0-beta.8",
     "babel-eslint": "^9.0.0",
     "deepmerge": "^2.1.1",
+    "go-ipfs-dep": "^0.4.17",
     "got": "^9.2.1",
     "ipfs": "^0.31.7",
+    "ipfs-api": "^24.0.2",
     "js-unixfsv2-draft": "^0.2.0",
     "multiaddr": "^5.0.0",
     "multiaddr-to-uri": "^4.0.0",
@@ -36,6 +40,7 @@
     "rmfr": "^2.0.0",
     "shortid": "^2.2.13",
     "standard": "^12.0.1",
+    "start-ipfs-daemon": "^1.0.1",
     "underscore": "^1.9.1"
   },
   "peerDependencies": {

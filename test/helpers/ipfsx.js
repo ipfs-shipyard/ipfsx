@@ -5,7 +5,9 @@ const rmfr = require('rmfr')
 const ipfsx = require('../../')
 const { createPortServiceClient } = require('./port-service')
 const deepmerge = require('deepmerge')
-const IPFS = require('ipfs')
+const Ipfs = require('ipfs')
+const IpfsApi = require('ipfs-api')
+const startIpfsDaemon = require('start-ipfs-daemon')
 
 const portClient = createPortServiceClient()
 
@@ -30,7 +32,30 @@ module.exports = async options => {
     }
   }, options)
 
-  const node = await ipfsx(new IPFS(options))
+  if (process.env.IPFS_TYPE === 'daemon') {
+    const daemon = await startIpfsDaemon({
+      ipfsPath: repoPath,
+      config: options.config,
+      stdout: process.stdout,
+      stderr: process.stderr
+    })
+    const node = await ipfsx(new IpfsApi(daemon.config.Addresses.API))
+    const stop = node.stop
+
+    node.stop = async () => {
+      try {
+        await stop()
+        await new Promise((resolve, reject) => setTimeout(resolve, 1000))
+        daemon.process.kill()
+      } finally {
+        await rmfr(repoPath)
+      }
+    }
+
+    return node
+  }
+
+  const node = await ipfsx(new Ipfs(options))
   const stop = node.stop
 
   node.stop = async () => {
