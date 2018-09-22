@@ -10,6 +10,7 @@ module.exports = async backend => {
     },
     cat: require('./cat')(backend),
     get: require('./get')(backend),
+    id: require('./id')(backend),
     start: require('./start')(backend),
     stop: require('./stop')(backend)
   }

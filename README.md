@@ -66,6 +66,7 @@ const node = await ipfsx(new IPFS)
 * [`block.stat`](#blockstat)
 * [`cat`](#cat)
 * [`get`](#get)
+* [`id`](#id)
 * [`start`](#start)
 * [`stop`](#stop)
 * TODO: more to come in upcoming releases!
@@ -355,6 +356,24 @@ for await (const file of node.get(cid)) {
 
   console.log('Data:', data)
 }
+```
+
+### id
+
+```js
+const identity = await node.id()
+console.log(identity)
+/*
+{ id: 'Qmak13He6dqmzWhJVoDGtgLBTZf9rrPXu2KrKk4RQBMKuD',
+  publicKey:
+   'CAASpgIwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCclFB7wWxstw3mBuXQV/FS3TjYK4BkQ2ChRPSuby33tj9s2gzC+A8Tu1fi6ZtKepFtIl879gtyV8Dtm3xnpDvBiMyvd+8ysKZ7c9dfFhTTedat2HcUPEq6uwxIHicuHuk8TXvzhZ6ovnkkn5b1OVEWicSsTKMBi4FoAySYFR2h15E0zDT5wK/EqENl6nzgd5gyEhuGRKh8jQly6/T8JABP1W4QJwJ7zaJWTRGDYrEK/T1eDcOF1vW0GjlNn0IbDsev8S5zzE2wXvtwZTLXzZlBEQ6S0wpxfWEHrQprMPEtZtv+I5LZDlZ1eecBNkiGEuWQAWBzr3XTJxkA2t0HLM5XAgMBAAE=',
+  addresses:
+   [ '/ip4/127.0.0.1/tcp/4002/ipfs/Qmak13He6dqmzWhJVoDGtgLBTZf9rrPXu2KrKk4RQBMKuD',
+     '/ip4/127.0.0.1/tcp/4003/ws/ipfs/Qmak13He6dqmzWhJVoDGtgLBTZf9rrPXu2KrKk4RQBMKuD',
+     '/ip4/192.168.0.17/tcp/4002/ipfs/Qmak13He6dqmzWhJVoDGtgLBTZf9rrPXu2KrKk4RQBMKuD' ],
+  agentVersion: 'js-ipfs/0.31.7',
+  protocolVersion: '9000' }
+*/
 ```
 
 ### start
