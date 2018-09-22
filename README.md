@@ -40,7 +40,7 @@ There's actually a bunch of other good reasons to switch to async/await and asyn
 
 Something for your consideration - async/await is inevitable for js-ipfs and js-ipfs-api, the CLI tests are already all promise based, when we inevitably upgrade to Hapi 17 the HTTP API will have to become promise based. The whole of the core interface is dual callback/promise based through `promisify`. Maybe it's time to double down on promises?
 
-Specific rationale for deviations from the `interface-ipfs-core` API is documented in [RATIONALE.md](RATIONALE.md).
+Specific rationale for deviations from the `interface-ipfs-core` API is documented in [RATIONALE.md](https://github.com/alanshaw/ipfsx/blob/master/RATIONALE.md).
 
 ## Install
 
@@ -72,17 +72,17 @@ for await (const chunk of node.cat(cid)) {
 
 ## API
 
-* [Getting started](API.md#getting-started)
-* [`add`](API.md#add)
-* [`block.get`](API.md#blockget)
-* [`block.put`](API.md#blockput)
-* [`block.stat`](API.md#blockstat)
-* [`cat`](API.md#cat)
-* [`get`](API.md#get)
-* [`id`](API.md#id)
-* [`start`](API.md#start)
-* [`stop`](API.md#stop)
-* [`version`](API.md#version)
+* [Getting started](https://github.com/alanshaw/ipfsx/blob/master/API.md#getting-started)
+* [`add`](https://github.com/alanshaw/ipfsx/blob/master/API.md#add)
+* [`block.get`](https://github.com/alanshaw/ipfsx/blob/master/API.md#blockget)
+* [`block.put`](https://github.com/alanshaw/ipfsx/blob/master/API.md#blockput)
+* [`block.stat`](https://github.com/alanshaw/ipfsx/blob/master/API.md#blockstat)
+* [`cat`](https://github.com/alanshaw/ipfsx/blob/master/API.md#cat)
+* [`get`](https://github.com/alanshaw/ipfsx/blob/master/API.md#get)
+* [`id`](https://github.com/alanshaw/ipfsx/blob/master/API.md#id)
+* [`start`](https://github.com/alanshaw/ipfsx/blob/master/API.md#start)
+* [`stop`](https://github.com/alanshaw/ipfsx/blob/master/API.md#stop)
+* [`version`](https://github.com/alanshaw/ipfsx/blob/master/API.md#version)
 * TODO: more to come in upcoming releases!
 
 ## Contribute
