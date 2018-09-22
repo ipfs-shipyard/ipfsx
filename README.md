@@ -72,6 +72,8 @@ const node = await ipfsx(new IPFS)
 
 ### Getting started
 
+Create a new ipfsx node, that uses an `interface-ipfs-core` compatible `backend`.
+
 #### `ipfsx(backend)`
 
 ##### Parameters
@@ -100,6 +102,8 @@ const node = await ipfsx(new IPFS(/* options */))
 ```
 
 ### add
+
+Add file data to IPFS.
 
 #### `node.add(input, [options])`
 
@@ -164,6 +168,8 @@ NOTE: if you have pull stream inputs, you can use [pull-stream-to-async-iterator
 
 ### block.get
 
+Fetch a raw block from the IPFS block store or the network via bitswap if not local.
+
 #### `node.block.get(cid)`
 
 ##### Parameters
@@ -190,6 +196,8 @@ console.log(block.data) // buffer containing block data
 ```
 
 ### block.put
+
+Put a block into the IPFS block store.
 
 #### `node.block.put(data, [options])`
 
@@ -233,6 +241,8 @@ const block = await node.block.put(unixfs.dir(__dirname)).last()
 
 ### block.stat
 
+Get stats for a block.
+
 #### `node.block.stat(cid)`
 
 ##### Parameters
@@ -257,6 +267,8 @@ console.log(block.cid.toBaseEncodedString(), stats)
 ```
 
 ### cat
+
+Get file contents.
 
 #### `node.cat(path, [options])`
 
@@ -288,6 +300,8 @@ console.log(data.toString()) // hello world
 ```
 
 ### get
+
+Get file or directory contents.
 
 #### `node.get(path)`
 
@@ -345,6 +359,8 @@ for await (const file of node.get(cid)) {
 
 ### start
 
+Start the IPFS node.
+
 #### `node.start()`
 
 ##### Returns
@@ -361,6 +377,8 @@ await node.start()
 ```
 
 ### stop
+
+Stop the IPFS node.
 
 #### `node.stop()`
 
