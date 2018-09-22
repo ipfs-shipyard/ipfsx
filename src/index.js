@@ -12,7 +12,8 @@ module.exports = async backend => {
     get: require('./get')(backend),
     id: require('./id')(backend),
     start: require('./start')(backend),
-    stop: require('./stop')(backend)
+    stop: require('./stop')(backend),
+    version: require('./version')(backend)
   }
 
   // Backend is IpfsApi

@@ -69,6 +69,7 @@ const node = await ipfsx(new IPFS)
 * [`id`](#id)
 * [`start`](#start)
 * [`stop`](#stop)
+* [`version`](#version)
 * TODO: more to come in upcoming releases!
 
 ### Getting started
@@ -368,13 +369,13 @@ Get IPFS node identity information.
 
 | Type | Description |
 |------|-------------|
-| `{id<String>, publicKey<String>, addresses<String[]>, agentVersion<String>, protocolVersion<String>}` | Identity information |
+| `Promise<{id<String>, publicKey<String>, addresses<String[]>, agentVersion<String>, protocolVersion<String>}>` | Identity information |
 
 ##### Example
 
 ```js
-const identity = await node.id()
-console.log(identity)
+const info = await node.id()
+console.log(info)
 /*
 { id: 'Qmak13He6dqmzWhJVoDGtgLBTZf9rrPXu2KrKk4RQBMKuD',
   publicKey:
@@ -424,6 +425,26 @@ Stop the IPFS node.
 ```js
 const node = await ipfsx(new IPFS())
 await node.stop()
+```
+
+### version
+
+Get IPFS node version information.
+
+#### `node.version()`
+
+##### Returns
+
+| Type | Description |
+|------|-------------|
+| `Promise<{version<String>, repo<String>, commit<String>}>` | Version information |
+
+##### Example
+
+```js
+const info = await node.version()
+console.log(info)
+// { version: '0.32.2', repo: 7, commit: '' }
 ```
 
 ## Contribute
