@@ -40,6 +40,8 @@ There's actually a bunch of other good reasons to switch to async/await and asyn
 
 Something for your consideration - async/await is inevitable for js-ipfs and js-ipfs-api, the CLI tests are already all promise based, when we inevitably upgrade to Hapi 17 the HTTP API will have to become promise based. The whole of the core interface is dual callback/promise based through `promisify`. Maybe it's time to double down on promises?
 
+Specific rationale for deviations from the `interface-ipfs-core` API is documented in [RATIONALE.md](RATIONALE.md).
+
 ## Install
 
 ```sh
