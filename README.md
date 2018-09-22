@@ -360,6 +360,18 @@ for await (const file of node.get(cid)) {
 
 ### id
 
+Get IPFS node identity information.
+
+#### `node.id()`
+
+##### Returns
+
+| Type | Description |
+|------|-------------|
+| `{id<String>, publicKey<String>, addresses<String[]>, agentVersion<String>, protocolVersion<String>}` | Identity information |
+
+##### Example
+
 ```js
 const identity = await node.id()
 console.log(identity)
