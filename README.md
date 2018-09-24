@@ -80,12 +80,12 @@ for await (const chunk of node.cat(cid)) {
 * [`cat`](https://github.com/alanshaw/ipfsx/blob/master/API.md#cat)
 * [`get`](https://github.com/alanshaw/ipfsx/blob/master/API.md#get)
 * [`id`](https://github.com/alanshaw/ipfsx/blob/master/API.md#id)
-* [`read`](https://github.com/alanshaw/ipfsx/blob/master/API.md#read)
+* [`read`](https://github.com/alanshaw/ipfsx/blob/master/API.md#read) <sup>(MFS)</sup>
 * [`start`](https://github.com/alanshaw/ipfsx/blob/master/API.md#start)
-* [`stat`](https://github.com/alanshaw/ipfsx/blob/master/API.md#stat)
+* [`stat`](https://github.com/alanshaw/ipfsx/blob/master/API.md#stat) <sup>(MFS)</sup>
 * [`stop`](https://github.com/alanshaw/ipfsx/blob/master/API.md#stop)
 * [`version`](https://github.com/alanshaw/ipfsx/blob/master/API.md#version)
-* [`write`](https://github.com/alanshaw/ipfsx/blob/master/API.md#write)
+* [`write`](https://github.com/alanshaw/ipfsx/blob/master/API.md#write) <sup>(MFS)</sup>
 * TODO: more to come in upcoming releases!
 
 ## Contribute

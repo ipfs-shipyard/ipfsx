@@ -8,12 +8,12 @@
 * [`cat`](#cat)
 * [`get`](#get)
 * [`id`](#id)
-* [`read`](#read)
+* [`read`](#read) <sup>(MFS)</sup>
 * [`start`](#start)
-* [`stat`](#stat)
+* [`stat`](#stat) <sup>(MFS)</sup>
 * [`stop`](#stop)
 * [`version`](#version)
-* [`write`](#write)
+* [`write`](#write) <sup>(MFS)</sup>
 
 ## Getting started
 
