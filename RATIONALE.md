@@ -74,3 +74,13 @@ Similar to Node.js `fs.createWriteStream` or `fs.writeFile`, 99.9% of the time w
 ### CID version 1
 
 Changed from 0 to 1. This will soon be the default for all new content added to IPFS anyway.
+
+## `stat`
+
+### No options
+
+I'm speculating that there's no significant performance gain to be had by only retrieving just the `hash` or the `size` of the node and I'm also speculating that these options will not be missed.
+
+`withLocal` functionality does not exist in either implementation.
+
+There is no need for a `cidBase` option as the returned stats object contains a `cid` property (a CID instance) instead of a `hash` property (a base 58 encoded string). There's no need for IPFS to assume that you want to display the CID of the content added and for that matter what base encoding you'd want to display it in.
