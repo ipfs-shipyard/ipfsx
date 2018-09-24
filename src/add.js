@@ -8,10 +8,14 @@ const { ends } = require('./util/iterator')
 
 module.exports = backend => {
   return function add (input, options) {
-    input = toInputIterator(input)
+    input = toIterable(input)
 
-    const inputIterator = async function * () {
-      const first = await input.next()
+    const inputIterator = input[Symbol.iterator]
+      ? input[Symbol.iterator]()
+      : input[Symbol.asyncIterator]()
+
+    const inputGenerator = async function * () {
+      const first = await inputIterator.next()
       if (first.done) return
 
       if (Buffer.isBuffer(first.value)) {
@@ -19,7 +23,9 @@ module.exports = backend => {
 
         const contentIterator = async function * () {
           yield first.value
-          for await (let chunk of input) {
+
+          const restIterable = { [Symbol.asyncIterator]: () => inputIterator }
+          for await (const chunk of restIterable) {
             yield chunk
           }
         }
@@ -30,7 +36,9 @@ module.exports = backend => {
 
         const contentIterator = async function * () {
           yield Buffer.from(first.value)
-          for await (let chunk of input) {
+
+          const restIterable = { [Symbol.asyncIterator]: () => inputIterator }
+          for await (const chunk of restIterable) {
             yield Buffer.from(chunk)
           }
         }
@@ -39,10 +47,11 @@ module.exports = backend => {
       } else if (first.value && first.value.content) {
         log('first value is object')
 
-        yield { ...first, content: toPull(toInputIterator(first.value.content)) }
+        yield { ...first, content: toPull(toIterable(first.value.content)) }
 
-        for await (let chunk of input) {
-          yield { ...chunk, content: toPull(toInputIterator(chunk.content)) }
+        const restIterable = { [Symbol.asyncIterator]: () => inputIterator }
+        for await (const chunk of restIterable) {
+          yield { ...chunk, content: toPull(toIterable(chunk.content)) }
         }
       } else {
         throw new Error('invalid input')
@@ -51,7 +60,7 @@ module.exports = backend => {
 
     const outputIterator = toIterator(
       pull(
-        toPull(inputIterator()),
+        toPull(inputGenerator()),
         backend.files.addPullStream(options),
         pull.map(({ path, hash }) => ({ path, cid: new CID(hash) }))
       )
@@ -61,7 +70,7 @@ module.exports = backend => {
   }
 }
 
-function toInputIterator (input) {
+function toIterable (input) {
   if (Buffer.isBuffer(input)) {
     return (function * () { yield input })()
   }
@@ -71,13 +80,11 @@ function toInputIterator (input) {
   }
 
   if (isIterator(input)) {
-    return input
+    return { [Symbol.asyncIterator]: () => input }
   }
 
   if (isIterable(input)) {
-    return input[Symbol.iterator]
-      ? input[Symbol.iterator]()
-      : input[Symbol.asyncIterator]()
+    return input
   }
 
   if (input && input.content) {

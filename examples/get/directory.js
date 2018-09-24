@@ -6,7 +6,7 @@ const ipfsx = require('../../')
 
 const rootDir = Path.resolve(__dirname, '..', '..')
 
-;(async () => {
+async function main () {
   const node = await ipfsx(new Ipfs({ repo: Path.join(Os.tmpdir(), `${Date.now()}`) }))
 
   const { cid, path } = await node.add([
@@ -30,4 +30,8 @@ const rootDir = Path.resolve(__dirname, '..', '..')
 
     console.log('Data:', data)
   }
-})()
+
+  await node.stop()
+}
+
+main()

@@ -61,7 +61,7 @@ const node = await ipfsx(new IPFS)
 // Add something to IPFS
 const { cid } = await node.add('hello world').first()
 
-// Stream content from IPFs using async iterators
+// Stream content from IPFS using async iterators
 let data = Buffer.alloc(0)
 for await (const chunk of node.cat(cid)) {
   data = Buffer.concat([data, chunk])
@@ -80,9 +80,11 @@ for await (const chunk of node.cat(cid)) {
 * [`cat`](https://github.com/alanshaw/ipfsx/blob/master/API.md#cat)
 * [`get`](https://github.com/alanshaw/ipfsx/blob/master/API.md#get)
 * [`id`](https://github.com/alanshaw/ipfsx/blob/master/API.md#id)
+* [`read`](https://github.com/alanshaw/ipfsx/blob/master/API.md#read)
 * [`start`](https://github.com/alanshaw/ipfsx/blob/master/API.md#start)
 * [`stop`](https://github.com/alanshaw/ipfsx/blob/master/API.md#stop)
 * [`version`](https://github.com/alanshaw/ipfsx/blob/master/API.md#version)
+* [`write`](https://github.com/alanshaw/ipfsx/blob/master/API.md#write)
 * TODO: more to come in upcoming releases!
 
 ## Contribute

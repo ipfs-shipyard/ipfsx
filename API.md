@@ -8,9 +8,11 @@
 * [`cat`](#cat)
 * [`get`](#get)
 * [`id`](#id)
+* [`read`](#read)
 * [`start`](#start)
 * [`stop`](#stop)
 * [`version`](#version)
+* [`write`](#write)
 
 ## Getting started
 
@@ -219,7 +221,7 @@ Get file contents.
 | Name | Type | Description |
 |------|------|-------------|
 | path | `String`\|`Buffer`\|[`CID`](https://www.npmjs.com/package/cids) | IPFS path or CID to cat data from |
-| options | `Object` | (optional) options |
+| options | `Object` | (optional) options TODO |
 
 #### Returns
 
@@ -329,6 +331,36 @@ console.log(info)
 */
 ```
 
+## read
+
+Read data from an MFS (Mutable File System) path.
+
+### `node.read(path, [options])`
+
+#### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| path | `String` | MFS path of the _file_ to read (not a directory) |
+| options | `Object` | (optional) options |
+| options.offset | `Number` | Byte offset to begin reading at, default: `0` |
+| options.length | `Number` | Number of bytes to read, default: `undefined` (read all bytes) |
+
+#### Returns
+
+| Type | Description |
+|------|-------------|
+| `Iterator<Buffer>` | An iterator that can be used to consume all the data |
+
+#### Example
+
+```js
+let data = Buffer.alloc(0)
+for (const chunk of node.read('/path/to/mfs/file')) {
+  data = Buffer.concat([data, chunk])
+}
+```
+
 ## start
 
 Start the IPFS node.
@@ -385,4 +417,49 @@ Get IPFS node version information.
 const info = await node.version()
 console.log(info)
 // { version: '0.32.2', repo: 7, commit: '' }
+```
+
+## write
+
+Write data to an MFS (Mutable File System) file.
+
+### `node.write(path, input, [options])`
+
+#### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| path | `String` | MFS path of the _file_ to write to |
+| input | `Buffer`\|`String`\|`Iterable`\|`Iterator` | Input data |
+| options | `Object` | (optional) options |
+| options.offset | `Number` | Byte offset to begin writing at, default: `0` |
+| options.length | `Number` | Number of bytes to write, default: `undefined` (write all bytes) |
+| options.create | `Boolean` | Create file if not exists, default: `true` |
+| options.parents | `Boolean` | Create parent directories if not exists, default: `false` |
+| options.truncate | `Boolean` | Truncate the file after writing, default: `false` |
+| options.rawLeaves | `Boolean` | Do not wrap leaf nodes in a protobuf, default: `false` |
+| options.cidVersion | `Number` | CID version to use when creating the node(s), default: 1 |
+
+#### Returns
+
+| Type | Description |
+|------|-------------|
+| `Promise` | Resolved when the write has been completed |
+
+#### Example
+
+Write a buffer/string:
+
+```js
+await node.write('/hello-world.txt', Buffer.from('hello world!'))
+```
+
+```js
+await node.write('/example/hello-world.txt', 'hello world!', { parents: true })
+```
+
+Write a Node.js stream:
+
+```js
+await node.write('/example.js', fs.createReadStream(__filename), { create: true })
 ```

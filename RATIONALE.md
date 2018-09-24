@@ -57,10 +57,20 @@ Are the same options but they have been renamed to be less cryptic.
 
 The default value for CID codec is changed from `dag-pb` to `raw`. This is to encourage users of the API to add correctly formed data.
 
-### CID version
+### CID version 1
 
 Changed from 0 to 1. This will soon be the default for all new content added to IPFS anyway.
 
 ### Iterator input
 
 This makes adding multiple blocks significantly easier and allows us to easily integrate with [`js-unixfsv2-draft`](https://github.com/mikeal/js-unixfsv2-draft).
+
+## `write`
+
+### Create by default
+
+Similar to Node.js `fs.createWriteStream` or `fs.writeFile`, 99.9% of the time we want to create the file if it doesn't exist, why make this difficult?
+
+### CID version 1
+
+Changed from 0 to 1. This will soon be the default for all new content added to IPFS anyway.

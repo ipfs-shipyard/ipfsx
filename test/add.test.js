@@ -1,5 +1,6 @@
 const test = require('ava')
 const { randomBytes } = require('crypto')
+const Fs = require('fs')
 const CID = require('cids')
 const { isString } = require('../src/util/type')
 const ipfsx = require('./helpers/ipfsx')
@@ -156,6 +157,15 @@ test('should add from async iterator of buffer', async t => {
     }
   }
   for await (const { cid, path } of node.add(iterator())) {
+    t.true(CID.isCID(cid))
+    t.true(isString(path))
+  }
+})
+
+test('should add from Node.js stream', async t => {
+  const { node } = t.context
+  const data = Fs.createReadStream(__filename)
+  for await (const { cid, path } of node.add(data)) {
     t.true(CID.isCID(cid))
     t.true(isString(path))
   }
