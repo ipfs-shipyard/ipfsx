@@ -63,7 +63,7 @@ Add file data to IPFS.
 
 | Type | Description |
 |------|-------------|
-| `Iterator<{`<br/>` cid<`[`CID`](https://www.npmjs.com/package/cids)`>,`<br/>` path<String>`<br/>`}>` | Iterator of content IDs and paths of added files/data. It has an async `first()` and `last()` function for returning just the first/last item. |
+| `Iterator<{`<br/>&nbsp;&nbsp;`cid<`[`CID`](https://www.npmjs.com/package/cids)`>,`<br/>&nbsp;&nbsp;`path<String>`<br/>`}>` | Iterator of content IDs and paths of added files/data. It has an async `first()` and `last()` function for returning just the first/last item. |
 
 #### Example
 
@@ -260,7 +260,7 @@ Get file or directory contents.
 
 | Type | Description |
 |------|-------------|
-| `Iterator<{`<br/>` path<String>,`<br/>` content<Iterator<Buffer>>`<br/>`}>` | An iterator that can be used to consume all the data |
+| `Iterator<{`<br/>&nbsp;&nbsp;`path<String>,`<br/>&nbsp;&nbsp;`content<Iterator<Buffer>>`<br/>`}>` | An iterator that can be used to consume all the data |
 
 #### Example
 
@@ -312,7 +312,7 @@ Get IPFS node identity information.
 
 | Type | Description |
 |------|-------------|
-| `Promise<{`<br/>` id<String>,`<br/>` publicKey<String>,`<br/>` addresses<String[]>,`<br/>` agentVersion<String>,`<br/>` protocolVersion<String>`<br/>`}>` | Identity information |
+| `Promise<{`<br/>&nbsp;&nbsp;`id<String>,`<br/>&nbsp;&nbsp;`publicKey<String>,`<br/>&nbsp;&nbsp;`addresses<String[]>,`<br/>&nbsp;&nbsp;`agentVersion<String>,`<br/>&nbsp;&nbsp;`protocolVersion<String>`<br/>`}>` | Identity information |
 
 #### Example
 
@@ -397,7 +397,7 @@ Get MFS (Mutable File System) file or directory status.
 
 | Type | Description |
 |------|-------------|
-| `Promise<{`<br/>` cid<CID>,`<br/>` size<Number>,`<br/>` cumulativeSize<Number>,`<br/>` blocks<Number>,`<br/>` type<String>`<br/>`}>` | Resolved when status has been retrieved.<br/><br/>* `cid` is the content identifier for the file or directory<br/>* `size` is the size in bytes of the data for the file/directory<br/>* `cumulativeSize` is the total size of the DAG node in bytes<br/>* `blocks` is the number of blocks this file/directory links to<br/>* `type` is "file" or "directory" |
+| `Promise<{`<br/>&nbsp;&nbsp;`cid<CID>,`<br/>&nbsp;&nbsp;`size<Number>,`<br/>&nbsp;&nbsp;`cumulativeSize<Number>,`<br/>&nbsp;&nbsp;`blocks<Number>,`<br/>&nbsp;&nbsp;`type<String>`<br/>`}>` | Resolved when status has been retrieved.<br/><br/>* `cid` is the content identifier for the file or directory<br/>* `size` is the size in bytes of the data for the file/directory<br/>* `cumulativeSize` is the total size of the DAG node in bytes<br/>* `blocks` is the number of blocks this file/directory links to<br/>* `type` is "file" or "directory" |
 
 #### Example
 
@@ -434,7 +434,7 @@ Get IPFS node version information.
 
 | Type | Description |
 |------|-------------|
-| `Promise<{`<br/>` version<String>,`<br/>` repo<String>,`<br/>` commit<String>`<br/>`}>` | Version information |
+| `Promise<{`<br/>&nbsp;&nbsp;`version<String>,`<br/>&nbsp;&nbsp;`repo<String>,`<br/>&nbsp;&nbsp;`commit<String>`<br/>`}>` | Version information |
 
 #### Example
 
