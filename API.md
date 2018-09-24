@@ -438,7 +438,7 @@ Write data to an MFS (Mutable File System) file.
 | options.parents | `Boolean` | Create parent directories if not exists, default: `false` |
 | options.truncate | `Boolean` | Truncate the file after writing, default: `false` |
 | options.rawLeaves | `Boolean` | Do not wrap leaf nodes in a protobuf, default: `false` |
-| options.cidVersion | `Number` | CID version to use when creating the node(s), default: 1 |
+| options.cidVersion | `Number` | CID version to use when creating the node(s), default: ~~1~~ FIXME: currently 0 due to https://github.com/ipfs/js-ipfs-mfs/issues/12 |
 
 #### Returns
 

@@ -7,8 +7,6 @@ const PortManager = require('port-manager')
 const shortid = require('shortid')
 const { DEFAULT_PORT_SERVICE_ADDR } = require('./')
 
-const AutoReleaseHeartbeat = 5000
-
 module.exports = async addr => {
   addr = Multiaddr(addr || process.env.PORT_SERVICE_ADDR || DEFAULT_PORT_SERVICE_ADDR)
 
@@ -16,7 +14,7 @@ module.exports = async addr => {
     throw new Error('invalid protocol')
   }
 
-  const portManager = new PortManager(AutoReleaseHeartbeat).include(3000, 9999)
+  const portManager = new PortManager().include(3000, 9999)
 
   const claim = name => new Promise((resolve, reject) => {
     portManager.claim(name, (err, service) => {
@@ -34,6 +32,7 @@ module.exports = async addr => {
 
   const queue = new Queue(1)
 
+  // TODO: implement release endpoint so we don't run out of ports!
   const handler = req => {
     const queryParams = QueryString.parse(req.url.split('?')[1] || '')
     const numPorts = getNumPorts(queryParams)

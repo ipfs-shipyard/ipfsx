@@ -42,7 +42,7 @@ test('should write from iterator of buffer', async t => {
 
 test('should write from async iterator of buffer', async t => {
   const { node } = t.context
-  const path = `/test-write-iterator-${Date.now()}.txt`
+  const path = `/test-write-async-iterator-${Date.now()}.txt`
   const data = randomArray(1, 100, () => randomBytes(randomInteger(1, 64)))
   const iterator = async function * () {
     for (let i = 0; i < data.length; i++) {

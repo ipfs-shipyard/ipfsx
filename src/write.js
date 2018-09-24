@@ -6,7 +6,8 @@ module.exports = backend => {
     input = toIterable(input)
     options = options || {}
     options.create = options.create == null ? true : options.create
-    options.cidVersion = options.cidVersion == null ? 1 : options.cidVersion
+    // FIXME: https://github.com/ipfs/js-ipfs-mfs/issues/12
+    options.cidVersion = options.cidVersion == null ? 0 : options.cidVersion
 
     const inputGenerator = async function * () {
       for await (const chunk of input) {
