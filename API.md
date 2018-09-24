@@ -121,7 +121,7 @@ Fetch a raw block from the IPFS block store or the network via bitswap if not lo
 
 | Name | Type | Description |
 |------|------|-------------|
-| cid | [`CID`](https://www.npmjs.com/package/cids) | CID of block to get |
+| cid |  `Buffer`\|`String`\|[`CID`](https://www.npmjs.com/package/cids) | CID of block to get |
 
 #### Returns
 
@@ -194,13 +194,13 @@ Get stats for a block.
 
 | Name | Type | Description |
 |------|------|-------------|
-| cid | [`CID`](https://www.npmjs.com/package/cids) | CID of block to get |
+| cid |  `Buffer`\|`String`\|[`CID`](https://www.npmjs.com/package/cids) | CID of block to get |
 
 #### Returns
 
 | Type | Description |
 |------|-------------|
-| {size<Number>} | Block stats |
+| `Promise<{size<Number>}>` | Block stats |
 
 #### Example
 
