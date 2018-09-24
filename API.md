@@ -10,6 +10,7 @@
 * [`id`](#id)
 * [`read`](#read)
 * [`start`](#start)
+* [`stat`](#stat)
 * [`stop`](#stop)
 * [`version`](#version)
 * [`write`](#write)
@@ -378,6 +379,30 @@ Start the IPFS node.
 ```js
 const node = await ipfsx(new IPFS({ start: false }))
 await node.start()
+```
+
+## stat
+
+Get MFS (Mutable File System) file or directory status.
+
+### `node.stat(path)`
+
+#### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| path | `String` | MFS path of the file or directory to get the status of |
+
+#### Returns
+
+| Type | Description |
+|------|-------------|
+| `Promise<{cid<CID>, size<Number>, cumulativeSize<Number>, blocks<Number>, type<String>}>` | Resolved when status has been retrieved. `cid` is the content identifier for the file or directory, `size` is the size in bytes of the data for the file/directory, `cumulativeSize` is the total size of the DAG node in bytes, `blocks` is the number of blocks this file/directory links to, `type` is "file" or "directory" |
+
+#### Example
+
+```js
+const { cid, size, cumulativeSize, blocks, type } = await node.stat('/hello-world.txt')
 ```
 
 ## stop

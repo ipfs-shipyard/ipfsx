@@ -13,6 +13,7 @@ module.exports = async backend => {
     id: require('./id')(backend),
     read: require('./read')(backend),
     start: require('./start')(backend),
+    stat: require('./stat')(backend),
     stop: require('./stop')(backend),
     version: require('./version')(backend),
     write: require('./write')(backend)
