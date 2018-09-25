@@ -2,6 +2,7 @@ const test = require('ava')
 const { randomBytes } = require('crypto')
 const CID = require('cids')
 const Path = require('path')
+const shortid = require('shortid')
 const ipfsx = require('./helpers/ipfsx')
 
 test.before(async t => { t.context.node = await ipfsx() })
@@ -9,7 +10,7 @@ test.after.always(t => t.context.node.stop())
 
 test('should stat a file', async t => {
   const { node } = t.context
-  const path = `/test-stat-${Date.now()}.txt`
+  const path = `/test-stat-${shortid()}.txt`
   const data = randomBytes(256)
 
   await node.write(path, data)
@@ -24,7 +25,7 @@ test('should stat a file', async t => {
 
 test('should stat a directory', async t => {
   const { node } = t.context
-  const path = `/test/test-stat-${Date.now()}.txt`
+  const path = `/test/test-stat-${shortid()}.txt`
   const data = randomBytes(256)
 
   await node.write(path, data, { parents: true })

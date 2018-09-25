@@ -8,8 +8,9 @@
     "test": "npm run lint && run-p --race test:*",
     "test:portservice": "node test/helpers/port-service/bin",
     "test:runner": "run-s test:runner:embedded",
-    "test:runner:embedded": "nyc --reporter=lcov --reporter=text ava --verbose",
-    "test:runner:daemon": "IPFS_TYPE=daemon ava --verbose"
+    "test:runner:embedded": "ava --verbose",
+    "test:runner:daemon": "IPFS_TYPE=daemon ava --verbose",
+    "coverage": "nyc --reporter=lcov --reporter=text ava --verbose"
   },
   "author": "Alan Shaw",
   "license": "MIT",

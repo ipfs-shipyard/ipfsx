@@ -65,15 +65,13 @@ Changed from 0 to 1. This will soon be the default for all new content added to 
 
 This makes adding multiple blocks significantly easier and allows us to easily integrate with [`js-unixfsv2-draft`](https://github.com/mikeal/js-unixfsv2-draft).
 
-## `write`
+## `mkdir`
 
-### Create by default
+### No format or hashAlg options
 
-Similar to Node.js `fs.createWriteStream` or `fs.writeFile`, 99.9% of the time we want to create the file if it doesn't exist, why make this difficult?
+These options might be useful in the future when unixfs2 comes along, but right now I don't know what would happen if I chose a format other than `dag-pb`. I'm not aware that there is an MFS implementation that even supports this.
 
-### CID version 1
-
-Changed from 0 to 1. This will soon be the default for all new content added to IPFS anyway.
+These options are also currently not implemented in js-ipfs-mfs.
 
 ## `stat`
 
@@ -84,3 +82,13 @@ I'm speculating that there's no significant performance gain to be had by only r
 `withLocal` functionality does not exist in either implementation.
 
 There is no need for a `cidBase` option as the returned stats object contains a `cid` property (a CID instance) instead of a `hash` property (a base 58 encoded string). There's no need for IPFS to assume that you want to display the CID of the content added and for that matter what base encoding you'd want to display it in.
+
+## `write`
+
+### Create by default
+
+Similar to Node.js `fs.createWriteStream` or `fs.writeFile`, 99.9% of the time we want to create the file if it doesn't exist, why make this difficult?
+
+### CID version 1
+
+Changed from 0 to 1. This will soon be the default for all new content added to IPFS anyway.

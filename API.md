@@ -8,6 +8,7 @@
 * [`cat`](#cat)
 * [`get`](#get)
 * [`id`](#id)
+* [`mkdir`](#mkdir) <sup>(MFS)</sup>
 * [`read`](#read) <sup>(MFS)</sup>
 * [`start`](#start)
 * [`stat`](#stat) <sup>(MFS)</sup>
@@ -330,6 +331,39 @@ console.log(info)
   agentVersion: 'js-ipfs/0.31.7',
   protocolVersion: '9000' }
 */
+```
+
+## mkdir
+
+Create an MFS (Mutable File System) directory.
+
+### `node.mkdir(path, [options])`
+
+#### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| path | `String` | MFS path of the directory to create |
+| options | `Object` | (optional) options |
+| options.parents | `Boolean` | Automatically create parent directories if they don't exist, default: `false` |
+| options.flush | `Boolean` | Immediately flush changes to disk, default: `true` |
+
+#### Returns
+
+| Type | Description |
+|------|-------------|
+| `Promise` | Resolved when the directory has been created |
+
+#### Example
+
+```js
+await node.mkdir('/my-directory')
+```
+
+Automatically create parent directories if they don't exist:
+
+```js
+await node.mkdir('/path/to/my/directory', { parents: true })
 ```
 
 ## read
