@@ -37,6 +37,7 @@ There's actually a bunch of other good reasons to switch to async/await and asyn
 * [Node.js readable streams are now async iterators](http://2ality.com/2018/04/async-iter-nodejs.html) thanks to [#17755](https://github.com/nodejs/node/pull/17755)!
 * Of note, it is trivial to convert from [pull stream to (async) iterator](https://github.com/alanshaw/pull-stream-to-async-iterator) and [vice versa](https://github.com/alanshaw/async-iterator-to-pull-stream).
 * Unhandled throws that cannot be caught will no longer be a problem
+* Better stack traces, stacks no longer clipped at async boundaries, [`await` stack traces better than promise stack traces](https://mathiasbynens.be/notes/async-stack-traces)
 
 Something for your consideration - async/await is inevitable for js-ipfs and js-ipfs-api, the CLI tests are already all promise based, when we inevitably upgrade to Hapi 17 the HTTP API will have to become promise based. The whole of the core interface is dual callback/promise based through `promisify`. Maybe it's time to double down on promises?
 
@@ -78,6 +79,7 @@ for await (const chunk of node.cat(cid)) {
 * [`block.put`](https://github.com/alanshaw/ipfsx/blob/master/API.md#blockput)
 * [`block.stat`](https://github.com/alanshaw/ipfsx/blob/master/API.md#blockstat)
 * [`cat`](https://github.com/alanshaw/ipfsx/blob/master/API.md#cat)
+* [`cp`](https://github.com/alanshaw/ipfsx/blob/master/API.md#cp)
 * [`get`](https://github.com/alanshaw/ipfsx/blob/master/API.md#get)
 * [`id`](https://github.com/alanshaw/ipfsx/blob/master/API.md#id)
 * [`mkdir`](https://github.com/alanshaw/ipfsx/blob/master/API.md#mkdir) <sup>(MFS)</sup>

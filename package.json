@@ -16,14 +16,14 @@
   "license": "MIT",
   "dependencies": {
     "async-iterator-to-pull-stream": "^1.1.0",
-    "cids": "^0.5.3",
+    "cids": "^0.5.4",
     "debug": "^4.0.1",
     "ipfs-block": "^0.7.1",
     "pull-stream-to-async-iterator": "^1.0.0"
   },
   "devDependencies": {
     "ava": "^1.0.0-beta.8",
-    "babel-eslint": "^9.0.0",
+    "babel-eslint": "^10.0.0",
     "deepmerge": "^2.1.1",
     "go-ipfs-dep": "^0.4.17",
     "got": "^9.2.1",

@@ -6,6 +6,7 @@
 * [`block.put`](#blockput)
 * [`block.stat`](#blockstat)
 * [`cat`](#cat)
+* [`cp`](#cp)
 * [`get`](#get)
 * [`id`](#id)
 * [`mkdir`](#mkdir) <sup>(MFS)</sup>
@@ -244,6 +245,59 @@ for await (const chunk of node.cat(cid, options)) {
 
 console.log(data.toString()) // hello world
 ```
+
+## cp
+
+Copy files to MFS (Mutable File System).
+
+### `node.cp(...from, to, [options])`
+
+#### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| from | `String` | IPFS path or MFS path to copy data from. |
+| to | `String` | Destination MFS path to copy to. |
+| options | `Object` | (optional) options |
+| options.parents | `Boolean` | Automatically create parent directories if they don't exist, default: `false` |
+| options.flush | `Boolean` | Immediately flush changes to disk, default: `true` |
+
+**Note:**
+
+If `from` has multiple values then `to` must be a directory.
+
+If `from` has a single value and `to` exists and is a directory, `from` will be copied into `to`.
+
+If `from` has a single value and `to` exists and is a file, `from` must be a file and the contents of `to` will be replaced with the contents of `from` otherwise an error will be returned.
+
+If `from` is an IPFS path, and an MFS path exists with the same name, the IPFS path will be chosen.
+
+#### Returns
+
+| Type | Description |
+|------|-------------|
+| `Promise` | Resolves when the data has been copied |
+
+#### Example
+
+Copy MFS to MFS:
+
+```js
+// To copy a file
+await node.cp('/src-file', '/dst-file')
+
+// To copy a directory
+await node.cp('/src-dir', '/dst-dir')
+
+// To copy multiple files to a directory
+await node.cp('/src-file1', '/src-file2', '/dst-dir')
+```
+
+Copy IPFS path to MFS:
+
+```js
+await node.cp('/ipfs/QmWGeRAEgtsHW3ec7U4qW2CyVy7eA2mFRVbk1nb24jFyks', '/hello-world.txt')
+``
 
 ## get
 
