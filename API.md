@@ -297,7 +297,7 @@ Copy IPFS path to MFS:
 
 ```js
 await node.cp('/ipfs/QmWGeRAEgtsHW3ec7U4qW2CyVy7eA2mFRVbk1nb24jFyks', '/hello-world.txt')
-``
+```
 
 ## get
 
