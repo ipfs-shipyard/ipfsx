@@ -6,7 +6,7 @@
 * [`block.put`](#blockput)
 * [`block.stat`](#blockstat)
 * [`cat`](#cat)
-* [`cp`](#cp)
+* [`cp`](#cp) <sup>(MFS)</sup>
 * [`get`](#get)
 * [`id`](#id)
 * [`mkdir`](#mkdir) <sup>(MFS)</sup>
