@@ -73,6 +73,11 @@ Add file data to IPFS.
 Add a string/buffer/object:
 
 ```js
+for await (const res of node.add('hello world')) {
+  console.log(res.cid)
+}
+
+// Or, since only one file is being added you can save some typing like this:
 const { cid } = await node.add('hello world').first()
 console.log(cid)
 ```
