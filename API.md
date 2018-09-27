@@ -11,6 +11,7 @@
 * [`id`](#id)
 * [`mkdir`](#mkdir) <sup>(MFS)</sup>
 * [`read`](#read) <sup>(MFS)</sup>
+* [`rm`](#rm) <sup>(MFS)</sup>
 * [`start`](#start)
 * [`stat`](#stat) <sup>(MFS)</sup>
 * [`stop`](#stop)
@@ -448,6 +449,36 @@ let data = Buffer.alloc(0)
 for (const chunk of node.read('/path/to/mfs/file')) {
   data = Buffer.concat([data, chunk])
 }
+```
+
+## rm
+
+Remove MFS (Mutable File System) files or directories.
+
+### `node.rm(...path, [options])`
+
+#### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| path | `String` | MFS path to remove. |
+| options | `Object` | (optional) options |
+| options.recursive | `Boolean` | Remove directories recursively, default: `false` |
+
+#### Returns
+
+| Type | Description |
+|------|-------------|
+| `Promise` | Resolves when the files/directories have been removed |
+
+#### Example
+
+```js
+// To remove a file
+await node.rm('/src-file')
+
+// To remove a directory
+await node.rm('/src-dir', { recursive: true })
 ```
 
 ## start

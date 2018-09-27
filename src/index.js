@@ -14,6 +14,7 @@ module.exports = async backend => {
     id: require('./id')(backend),
     mkdir: require('./mkdir')(backend),
     read: require('./read')(backend),
+    rm: require('./rm')(backend),
     start: require('./start')(backend),
     stat: require('./stat')(backend),
     stop: require('./stop')(backend),

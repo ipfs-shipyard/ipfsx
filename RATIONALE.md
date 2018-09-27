@@ -65,7 +65,7 @@ Changed from 0 to 1. This will soon be the default for all new content added to 
 
 This makes adding multiple blocks significantly easier and allows us to easily integrate with [`js-unixfsv2-draft`](https://github.com/mikeal/js-unixfsv2-draft).
 
-## `mkdir`
+## `mkdir` & `cp`
 
 ### No format or hashAlg options
 
