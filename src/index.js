@@ -13,6 +13,7 @@ module.exports = async backend => {
     get: require('./get')(backend),
     id: require('./id')(backend),
     mkdir: require('./mkdir')(backend),
+    mv: require('./mv')(backend),
     read: require('./read')(backend),
     rm: require('./rm')(backend),
     start: require('./start')(backend),

@@ -10,6 +10,7 @@
 * [`get`](#get)
 * [`id`](#id)
 * [`mkdir`](#mkdir) <sup>(MFS)</sup>
+* [`mv`](#mv) <sup>(MFS)</sup>
 * [`read`](#read) <sup>(MFS)</sup>
 * [`rm`](#rm) <sup>(MFS)</sup>
 * [`start`](#start)
@@ -413,6 +414,51 @@ Create an MFS (Mutable File System) directory.
 | Type | Description |
 |------|-------------|
 | `Promise` | Resolved when the directory has been created |
+
+#### Example
+
+```js
+await node.mkdir('/my-directory')
+```
+
+Automatically create parent directories if they don't exist:
+
+```js
+await node.mkdir('/path/to/my/directory', { parents: true })
+```
+
+## mv
+
+Move MFS (Mutable File System) files and directories.
+
+### `node.mv(...from, to, [options])`
+
+#### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| path | `String` | IPFS path or MFS path to move data from. |
+| options | `Object` | (optional) options |
+| options.parents | `Boolean` | Automatically create parent directories if they don't exist, default: `false` |
+| options.flush | `Boolean` | Immediately flush changes to disk, default: `true` |
+
+**Note:**
+
+If `from` has multiple values then `to` must be a directory.
+
+If `from` has a single value and `to` exists and is a directory, `from` will be moved into `to`.
+
+If `from` has a single value and `to` exists and is a file, `from` must be a file and the contents of `to` will be replaced with the contents of `from` otherwise an error will be returned.
+
+If `from` is an IPFS path, and an MFS path exists with the same name, the IPFS path will be chosen.
+
+All values of `from` will be removed after the operation is complete, unless they are an IPFS path.
+
+#### Returns
+
+| Type | Description |
+|------|-------------|
+| `Promise` | Resolved when the files/directories have been moved |
 
 #### Example
 
