@@ -83,6 +83,7 @@ for await (const chunk of node.cat(cid)) {
 * [`get`](https://github.com/alanshaw/ipfsx/blob/master/API.md#get)
 * [`id`](https://github.com/alanshaw/ipfsx/blob/master/API.md#id)
 * [`mkdir`](https://github.com/alanshaw/ipfsx/blob/master/API.md#mkdir) <sup>(MFS)</sup>
+* [`mv`](https://github.com/alanshaw/ipfsx/blob/master/API.md#mv) <sup>(MFS)</sup>
 * [`read`](https://github.com/alanshaw/ipfsx/blob/master/API.md#read) <sup>(MFS)</sup>
 * [`rm`](https://github.com/alanshaw/ipfsx/blob/master/API.md#rm) <sup>(MFS)</sup>
 * [`start`](https://github.com/alanshaw/ipfsx/blob/master/API.md#start)
