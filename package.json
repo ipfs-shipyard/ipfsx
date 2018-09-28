@@ -44,9 +44,6 @@
     "start-ipfs-daemon": "^1.0.1",
     "underscore": "^1.9.1"
   },
-  "peerDependencies": {
-    "ipfs": "latest"
-  },
   "ava": {
     "babel": false,
     "compileEnhancements": false,
