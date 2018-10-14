@@ -261,6 +261,8 @@ Abort after a timeout:
 const controller = new AbortController()
 setTimeout(() => controller.abort(), 5000)
 
+// Valid CID, but does not exist on the network
+const cid = 'zb2rhbry6PX6Qktru4SpxuVdkJm4mjdTqs8qzaPpvHk2tmx2w'
 let data = Buffer.alloc(0)
 
 try {
