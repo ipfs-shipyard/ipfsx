@@ -22,6 +22,7 @@
     "pull-stream-to-async-iterator": "^1.0.0"
   },
   "devDependencies": {
+    "abort-controller": "^1.0.2",
     "ava": "^1.0.0-beta.8",
     "babel-eslint": "^10.0.0",
     "deepmerge": "^2.1.1",

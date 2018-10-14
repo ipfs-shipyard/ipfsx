@@ -37,6 +37,18 @@ Another example is if adding multiple items to a directory, often times you're o
 
 Methods in `files` namespace in js-ipfs have been hoisted to the root namespace. IPFS's prime purpose is to deal with files, so we privilege these calls. They are also the most widely used calls so saving on typing helps developers.
 
+## Abortable API methods
+
+Methods that may never or may take a long time to resolve are abortable (`cat` and others). They take an [`AbortSignal`](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal) as `signal` in their options object. Abort signals are obtained from [`AbortController`](https://developer.mozilla.org/en-US/docs/Web/API/AbortController) objects and allow the method call to be aborted externally, because of a timeout, user request or other reason.
+
+`AbortController` is implemented in all modern browsers and there exists an `abort-controller` module in npm for use with Node.js.
+
+Hopefully web developers will already be familiar with this construct as it is used with the `fetch` API to abort HTTP requests.
+
+The caveat with this option right now is that neither js-ipfs nor js-ipfs-api support cancelling method calls, so use of this option will not actually cancel anything, but will allow program flow to continue (an error is thrown) when the `controller.abort()` function is called.
+
+Note, when js-ipfs-api starts using `fetch` it should be easy to pass this option to it.
+
 ## `add`
 
 ### Add a `String`

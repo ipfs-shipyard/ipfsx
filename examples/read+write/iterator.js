@@ -11,8 +11,6 @@ async function main () {
   const path = `/example-read+write-iterator-${Date.now()}.txt`
   const { data, iterator } = randomData()
 
-  console.log('iterator[Symbol.iterable]=', iterator)
-
   console.log(`writing to ${path}`)
   await node.write(path, iterator)
 

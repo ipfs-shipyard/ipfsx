@@ -232,6 +232,7 @@ Get file contents.
 |------|------|-------------|
 | path | `String`\|`Buffer`\|[`CID`](https://www.npmjs.com/package/cids) | IPFS path or CID to cat data from |
 | options | `Object` | (optional) options TODO |
+| options.signal | [`AbortSignal`](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal) | A signal that can be used to abort the request |
 
 #### Returns
 
@@ -251,6 +252,28 @@ for await (const chunk of node.cat(cid, options)) {
 }
 
 console.log(data.toString()) // hello world
+```
+
+Abort after a timeout:
+
+```js
+// Abort if not complete after 5 seconds
+const controller = new AbortController()
+setTimeout(() => controller.abort(), 5000)
+
+let data = Buffer.alloc(0)
+
+try {
+  for await (const chunk of node.cat(cid, { signal: controller.signal })) {
+    data = Buffer.concat([data, chunk])
+  }
+} catch (err) {
+  if (err.message === 'operation aborted') {
+    console.log('Aborted after timeout')
+  } else {
+    throw err
+  }
+}
 ```
 
 ## cp
