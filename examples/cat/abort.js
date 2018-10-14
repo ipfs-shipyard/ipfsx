@@ -11,6 +11,7 @@ async function main () {
   const controller = new AbortController()
   setTimeout(() => controller.abort(), 5000)
 
+  // CID is valid, but (VERY improbably) not on the network
   const cid = 'zb2rhbry6PX6Qktru4SpxuVdkJm4mjdTqs8qzaPpvHk2tmx2w'
   console.log(`attempting to cat ${cid} for 5 seconds...`)
 
@@ -19,6 +20,8 @@ async function main () {
     for await (const _ of node.cat(cid, { signal: controller.signal })) {
       // do nothing!
     }
+    // should not get here
+    throw new Error('did not abort :(')
   } catch (err) {
     if (err.message === 'operation aborted') {
       console.log('aborted successfully after 5 seconds')
