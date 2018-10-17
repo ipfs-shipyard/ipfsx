@@ -18,7 +18,7 @@ test('should cat', async t => {
   t.deepEqual(output, input)
 })
 
-test('should abort', async t => {
+test('should abort cat', async t => {
   const { node } = t.context
   const input = randomBytes(randomInteger(1, 256))
   const { cid } = await node.add(input).first()
