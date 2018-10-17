@@ -342,6 +342,8 @@ Get file or directory contents.
 | Name | Type | Description |
 |------|------|-------------|
 | path | `String`\|`Buffer`\|[`CID`](https://www.npmjs.com/package/cids) | IPFS path or CID to get data from |
+| options | `Object` | (optional) options |
+| options.signal | [`AbortSignal`](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal) | A signal that can be used to abort the request |
 
 #### Returns
 
