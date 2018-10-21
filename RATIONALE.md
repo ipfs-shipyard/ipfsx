@@ -49,6 +49,14 @@ The caveat with this option right now is that neither js-ipfs nor js-ipfs-api su
 
 Note, when js-ipfs-api starts using `fetch` it should be easy to pass this option to it.
 
+## A unified `ls`
+
+There's two `ls` commands in IPFS. One that deals with IPFS paths like `/ipfs/QmHash/path/to/file` and another that deals with MFS paths `/path/to/file`. There has long been plans to unify the functionality but it has, so far, not come to pass.
+
+The issue is differentiating between the two different path types - there's a small possibility someone saved something in MFS at `/ipfs/QmHash/path/to/file`. MFS already deals with this in the `cp` command. If the path looks like an IPFS path it assumes it's an IPFS path even if the same path exists in MFS.
+
+It's confusing for `cp` to be able to deal with both paths types but for `ls` not to be able to do the same. Similarly, it's confusing to have two `ls` commands that deal with files in IPFS.
+
 ## `add`
 
 ### Add a `String`
