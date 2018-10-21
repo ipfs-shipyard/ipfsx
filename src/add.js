@@ -47,7 +47,7 @@ module.exports = backend => {
       } else if (first.value && first.value.content) {
         log('first value is object')
 
-        yield { ...first, content: toPull(toIterable(first.value.content)) }
+        yield { ...first.value, content: toPull(toIterable(first.value.content)) }
 
         const restIterable = { [Symbol.asyncIterator]: () => inputIterator }
         for await (const chunk of restIterable) {
