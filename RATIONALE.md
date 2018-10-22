@@ -49,6 +49,32 @@ The caveat with this option right now is that neither js-ipfs nor js-ipfs-api su
 
 Note, when js-ipfs-api starts using `fetch` it should be easy to pass this option to it.
 
+## A unified `ls`
+
+There's two `ls` commands in IPFS. One that deals with IPFS paths like `/ipfs/QmHash/path/to/file` and another that deals with MFS paths `/path/to/file`. There has long been plans to unify the functionality but it has, so far, not come to pass.
+
+The issue is differentiating between the two different path types - there's a small possibility someone saved something in MFS at `/ipfs/QmHash/path/to/file`. MFS already deals with this in the `cp` command. If the path looks like an IPFS path it assumes it's an IPFS path even if the same path exists in MFS.
+
+It's confusing for `cp` to be able to deal with both path types but for `ls` not to be able to do the same. Similarly, it's confusing to have two `ls` commands that deal with files in IPFS.
+
+### TODO: Consistent sizes
+
+For files, the size property of `ls` _should_ correspond to the total size of the node (including protobuf wrappers) as well as any of its descendant nodes.
+
+For directories, the size property _should_ correspond to the total size of the directory and its contents, (files and directories) and all their descendants.
+
+Essentially, directories are no different to files, since files can be split into multiple DAG nodes. This may happen if they exceed the max chunk size or because a custom chunker was used to build the graph and determined a specific chunk size. The only difference is the unixfs metadata that accompanies the data in the DAG node (which may be none when using the raw-leaves option).
+
+A size property that is just the size of the node is rarely useful in applications. This data should be able to be derived and stored with the node on write so there's no need to calculate it again after the fact.
+
+### Consistent type field
+
+The type field will contain the string "file" or "directory" to differentiate between file/directory nodes. A number is not useful to an application programmer as they'll need to lookup the type each time it is used.
+
+### Streaming output via async iterator
+
+Get listing information as it is calculated - a better user experience.
+
 ## `add`
 
 ### Add a `String`

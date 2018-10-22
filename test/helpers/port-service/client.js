@@ -12,7 +12,7 @@ module.exports = apiAddr => {
 
       const res = await got(url + 'claim', {
         json: true,
-        query: { num, name: options.name }
+        query: { num }
       })
 
       return res.body.ports
