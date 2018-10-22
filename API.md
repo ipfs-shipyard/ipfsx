@@ -433,7 +433,7 @@ List directory contents.
 
 | Name | Type | Description |
 |------|------|-------------|
-| path | `String` | IPFS or MFS path of a _directory_ to list contents of |
+| path | `String` | IPFS or MFS path of a _directory_ to list contents of. If `path` is an IPFS path, and an MFS path exists with the same name, the IPFS path will be chosen. |
 
 #### Returns
 
