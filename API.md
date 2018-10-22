@@ -439,7 +439,7 @@ List directory contents.
 
 | Type | Description |
 |------|-------------|
-| `Iterator<{`<br/>&nbsp;&nbsp;`cid<CID>,`<br/>&nbsp;&nbsp;`name<String>,`<br/>&nbsp;&nbsp;`size<Number>,`<br/>&nbsp;&nbsp;`type<String>`<br/>`}>` | An iterator that can be used to consume the listing<br/><br/>* `cid` is the content identifier for the file or directory<br/>* `name` is the name of the file or directory<br/>* `size` is the total size for the file/directory including all descendants and unixfs wrapper data. TODO: currently whatever js-ipfs or js-ipfs-api returns. Might be too small, too big or 0<br/>* `type` is either "directory" or "file"  |
+| `Iterator<{`<br/>&nbsp;&nbsp;`cid<CID>,`<br/>&nbsp;&nbsp;`name<String>,`<br/>&nbsp;&nbsp;`size<Number>,`<br/>&nbsp;&nbsp;`type<String>`<br/>`}>` | An iterator that can be used to consume the listing<br/><br/>* `cid` is the content identifier for the file or directory<br/>* `name` is the name of the file or directory<br/>* `size` is the total size in bytes for the file/directory including all descendants and unixfs wrapper data. TODO: currently whatever js-ipfs or js-ipfs-api returns. Might be too small, too big or 0<br/>* `type` is either "directory" or "file"  |
 
 #### Example
 
