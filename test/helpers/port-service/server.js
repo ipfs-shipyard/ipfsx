@@ -3,8 +3,7 @@ const Queue = require('promise-queue')
 const { promisify } = require('util')
 const HTTP = require('http')
 const QueryString = require('querystring')
-const PortManager = require('port-manager')
-const shortid = require('shortid')
+const getPort = require('get-port')
 const { DEFAULT_PORT_SERVICE_ADDR } = require('./')
 
 module.exports = async addr => {
@@ -14,34 +13,16 @@ module.exports = async addr => {
     throw new Error('invalid protocol')
   }
 
-  const portManager = new PortManager().include(3000, 9999)
-
-  const claim = name => new Promise((resolve, reject) => {
-    portManager.claim(name, (err, service) => {
-      // TODO: err might be string, remove when fixed upstream
-      // https://github.com/mgesmundo/port-manager/pull/2
-      if (err) {
-        if (Object.prototype.toString.call(err) === '[object String]') {
-          return reject(new Error(err))
-        }
-        return reject(err)
-      }
-      resolve(service)
-    })
-  })
-
   const queue = new Queue(1)
 
-  // TODO: implement release endpoint so we don't run out of ports!
   const handler = req => {
     const queryParams = QueryString.parse(req.url.split('?')[1] || '')
     const numPorts = getNumPorts(queryParams)
-    const serviceName = queryParams.name || `ipfs-${shortid()}`
 
     return queue.add(async () => {
       const ports = []
       for (let i = 0; i < numPorts; i++) {
-        const { port } = await claim(`${serviceName}[${i}]`)
+        const port = await getPort()
         ports.push(port)
       }
       return { ports }
