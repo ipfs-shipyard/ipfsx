@@ -57,11 +57,13 @@ The issue is differentiating between the two different path types - there's a sm
 
 It's confusing for `cp` to be able to deal with both path types but for `ls` not to be able to do the same. Similarly, it's confusing to have two `ls` commands that deal with files in IPFS.
 
-### Consistent sizes
+### TODO: Consistent sizes
 
-For files, the size property of `ls` will correspond to the total size of the node (including protobuf wrappers) as well as any of it's descendant nodes.
+For files, the size property of `ls` _should_ correspond to the total size of the node (including protobuf wrappers) as well as any of its descendant nodes.
 
-For directories, the size property will correspond to the total size of the directory and it's contents, (files and directories) and all their descendants.
+For directories, the size property _should_ correspond to the total size of the directory and its contents, (files and directories) and all their descendants.
+
+Essentially, directories are no different to files, since files can be split into multiple DAG nodes. This may happen if they exceed the max chunk size or because a custom chunker was used to build the graph and determined a specific chunk size. The only difference is the unixfs metadata that accompanies the data in the DAG node (which may be none when using the raw-leaves option).
 
 A size property that is just the size of the node is rarely useful in applications. This data should be able to be derived and stored with the node on write so there's no need to calculate it again after the fact.
 

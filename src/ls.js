@@ -9,11 +9,10 @@ module.exports = backend => {
     if (path.startsWith('/ipfs')) {
       return (async function * () {
         const it = toIterator(backend.lsPullStream(path, options))
-        for await (const { name, path, size, hash, type } of it) {
+        for await (const { name, size, hash, type } of it) {
           yield {
             cid: new CID(hash),
             name,
-            path,
             size,
             type: type === 'dir' ? 'directory' : 'file'
           }
@@ -27,7 +26,6 @@ module.exports = backend => {
         yield {
           cid: new CID(hash),
           name,
-          path,
           size,
           type: type === 1 ? 'directory' : 'file'
         }

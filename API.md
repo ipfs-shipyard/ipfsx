@@ -9,6 +9,7 @@
 * [`cp`](#cp) <sup>(MFS)</sup>
 * [`get`](#get)
 * [`id`](#id)
+* [`ls`](#ls) <sup>(MFS)</sup>
 * [`mkdir`](#mkdir) <sup>(MFS)</sup>
 * [`mv`](#mv) <sup>(MFS)</sup>
 * [`read`](#read) <sup>(MFS)</sup>
@@ -62,6 +63,7 @@ Add file data to IPFS.
 |------|------|-------------|
 | input | `Buffer`\|`String`\|`Object<{content, path?}>`\|`Iterable`\|`Iterator` | Input files/data |
 | options | `Object` | (optional) options |
+| options.wrapWithDirectory | `Boolean` | Add the input files into a directory. This will be the last item output from the returned iterator. |
 
 #### Returns
 
@@ -418,6 +420,84 @@ console.log(info)
      '/ip4/192.168.0.17/tcp/4002/ipfs/Qmak13He6dqmzWhJVoDGtgLBTZf9rrPXu2KrKk4RQBMKuD' ],
   agentVersion: 'js-ipfs/0.31.7',
   protocolVersion: '9000' }
+*/
+```
+
+## ls
+
+List directory contents.
+
+### `node.ls(path)`
+
+#### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| path | `String` | IPFS or MFS path of a _directory_ to list contents of |
+
+#### Returns
+
+| Type | Description |
+|------|-------------|
+| `Iterator<{`<br/>&nbsp;&nbsp;`cid<CID>,`<br/>&nbsp;&nbsp;`name<String>`,`<br/>&nbsp;&nbsp;`size<Number>,`<br/>&nbsp;&nbsp;`type<String>``<br/>`}>` | An iterator that can be used to consume the listing<br/><br/>* `cid` is the content identifier for the file or directory<br/>* `name` is the name of the file or directory<br/>* `size` is the total size for the file/directory including all descendants and unixfs wrapper data. TODO: currently whatever js-ipfs or js-ipfs-api returns. Might be too small, too big or 0<br/>* `type` is either "directory" or "file"  |
+
+#### Example
+
+IPFS path listing:
+
+```js
+const res = await node.add([
+  { path: `file1`, content: `${Math.random()}` },
+  { path: `file2`, content: `${Math.random()}` },
+  { path: `dir/file3`, content: `${Math.random()}` }
+], { wrapWithDirectory: true }).last()
+
+for await (const { cid, name, size, type } of node.ls(`/ipfs/${res.cid}`)) {
+  console.log({ cid: cid.toString(), name, size, type })
+}
+
+/*
+{ cid: 'QmdyDRruDdLc8ZFU8ekfsbgbL6QAVvfCXherJte1muRng6',
+  name: 'dir',
+  size: 78,
+  type: 'directory' }
+{ cid: 'QmSBZyCUSVv5ByZpDcC3MMd7fGFr1t7racVAGeo1P7wP4b',
+  name: 'file1',
+  size: 27,
+  type: 'file' }
+{ cid: 'QmTScjxfdvkoTre1ySsmmhXFUnikRGbevYPN97MFEzwLGP',
+  name: 'file2',
+  size: 27,
+  type: 'file' }
+*/
+```
+
+MFS path listing:
+
+```js
+const dirName = `/test-${Date.now()}`
+
+await node.write(`${dirName}/file1`, `${Math.random()}`, { parents: true })
+await node.write(`${dirName}/file2`, `${Math.random()}`, { parents: true })
+await node.write(`${dirName}/dir/file3`, `${Math.random()}`, { parents: true })
+
+for await (const { cid, name, size, type } of node.ls(dirName)) {
+  console.log({ cid: cid.toString(), name, size, type })
+}
+
+/*
+{ cid: 'Qmcao818uTXkZcV7JfwSKuBkTmGJUqkAY4Ur1mJDD2w87X',
+  name: 'file2',
+  size: 19,
+  type: 'file' }
+{ cid: 'QmZbdgi3ZesUbiHAGG5yaGqS7Dav3yUiGgiL4Lqee9DP3E',
+  name: 'file1',
+  size: 18,
+  type: 'file' }
+{ cid: 'QmXYZQedxLmp33HtkgNvSSHn7US3UhSNzYe8aF8N8wXpxH',
+  name: 'dir',
+  size: 0,
+  type: 'directory' }
 */
 ```
 
