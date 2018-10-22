@@ -55,7 +55,23 @@ There's two `ls` commands in IPFS. One that deals with IPFS paths like `/ipfs/Qm
 
 The issue is differentiating between the two different path types - there's a small possibility someone saved something in MFS at `/ipfs/QmHash/path/to/file`. MFS already deals with this in the `cp` command. If the path looks like an IPFS path it assumes it's an IPFS path even if the same path exists in MFS.
 
-It's confusing for `cp` to be able to deal with both paths types but for `ls` not to be able to do the same. Similarly, it's confusing to have two `ls` commands that deal with files in IPFS.
+It's confusing for `cp` to be able to deal with both path types but for `ls` not to be able to do the same. Similarly, it's confusing to have two `ls` commands that deal with files in IPFS.
+
+### Consistent sizes
+
+For files, the size property of `ls` will correspond to the total size of the node (including protobuf wrappers) as well as any of it's descendant nodes.
+
+For directories, the size property will correspond to the total size of the directory and it's contents, (files and directories) and all their descendants.
+
+A size property that is just the size of the node is rarely useful in applications. This data should be able to be derived and stored with the node on write so there's no need to calculate it again after the fact.
+
+### Consistent type field
+
+The type field will contain the string "file" or "directory" to differentiate between file/directory nodes. A number is not useful to an application programmer as they'll need to lookup the type each time it is used.
+
+### Streaming output via async iterator
+
+Get listing information as it is calculated - a better user experience.
 
 ## `add`
 

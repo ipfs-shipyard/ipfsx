@@ -22,12 +22,15 @@ module.exports = backend => {
     }
 
     return (async function * () {
-      const res = await backend.files.ls(path, options)
-      console.log(res)
-      for (const item of res) {
-        const { name, size, hash, type } = item
-        console.log(item)
-        yield { cid: new CID(hash), name, path, size, type }
+      const res = await backend.files.ls(path, Object.assign({}, options, { long: true }))
+      for (const { name, size, hash, type } of res) {
+        yield {
+          cid: new CID(hash),
+          name,
+          path,
+          size,
+          type: type === 1 ? 'directory' : 'file'
+        }
       }
     })()
   }

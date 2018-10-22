@@ -33,12 +33,12 @@ test('should ls an IPFS path', async t => {
     const inputItemName = inputItem.path.split('/')[0]
     const outputItem = output.find(({ name }) => inputItemName === name)
     t.truthy(outputItem)
-    t.true(outputItem.size > inputItem.content.length)
+    t.is(outputItem.size, inputItem.content.length)
     t.is(outputItem.type, inputItem.path.includes('/') ? 'directory' : 'file')
   })
 })
 
-test.only('should ls an MFS path', async t => {
+test('should ls an MFS path', async t => {
   const { node } = t.context
 
   const input = randomArray(1, 10, () => ({
@@ -54,14 +54,8 @@ test.only('should ls an MFS path', async t => {
 
   const { cid } = await node.add(input, { wrapWithDirectory: true }).last()
 
-  for await (const file of node.add(input, { wrapWithDirectory: true })) {
-    console.log(file)
-  }
-
   const dirName = shortid()
   await node.cp(`/ipfs/${cid}`, `/${dirName}`)
-
-  console.log(`/ipfs/${cid}`, `/${dirName}`)
 
   const output = []
 
@@ -73,7 +67,7 @@ test.only('should ls an MFS path', async t => {
     const inputItemName = inputItem.path.split('/')[0]
     const outputItem = output.find(({ name }) => inputItemName === name)
     t.truthy(outputItem)
-    t.true(outputItem.size > inputItem.content.length)
+    t.is(outputItem.size, inputItem.content.length)
     t.is(outputItem.type, inputItem.path.includes('/') ? 'directory' : 'file')
   })
 })
