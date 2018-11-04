@@ -17,7 +17,7 @@ module.exports = backend => {
         } else {
           log('put', block)
           yield await backend.block.put(block, {
-            format: options.cidCodec || 'raw',
+            format: options.format || 'raw',
             version: options.cidVersion || 1,
             mhtype: options.hashAlg || 'sha2-256',
             mhlen: options.hashLen

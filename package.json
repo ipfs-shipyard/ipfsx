@@ -9,7 +9,7 @@
     "test:portservice": "node test/helpers/port-service/bin",
     "test:runner": "run-s test:runner:embedded",
     "test:runner:embedded": "ava --verbose",
-    "test:runner:daemon": "IPFS_TYPE=daemon ava --verbose",
+    "test:runner:daemon": "IPFS_TYPE=go-daemon ava --verbose",
     "coverage": "nyc --reporter=lcov --reporter=text ava --verbose"
   },
   "author": "Alan Shaw",
@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "abort-controller": "^1.0.2",
-    "ava": "^1.0.0-beta.8",
+    "ava": "^1.0.0-rc.1",
     "babel-eslint": "^10.0.0",
     "deepmerge": "^2.1.1",
     "go-ipfs-dep": "^0.4.17",
@@ -47,7 +47,7 @@
     "rmfr": "^2.0.0",
     "shortid": "^2.2.13",
     "standard": "^12.0.1",
-    "start-ipfs-daemon": "^1.0.1",
+    "start-ipfs-daemon": "^1.1.0",
     "underscore": "^1.9.1"
   },
   "ava": {

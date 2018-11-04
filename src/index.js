@@ -4,12 +4,16 @@ module.exports = async (backend, options) => {
   const api = {
     add: require('./add')(backend, options),
     block: {
-      add: require('./block/get')(backend, options),
+      get: require('./block/get')(backend, options),
       put: require('./block/put')(backend, options),
       stat: require('./block/stat')(backend, options)
     },
     cat: require('./cat')(backend, options),
     cp: require('./cp')(backend, options),
+    dag: {
+      put: require('./dag/put')(backend, options),
+      resolve: require('./dag/resolve')(backend, options)
+    },
     get: require('./get')(backend, options),
     id: require('./id')(backend, options),
     ls: require('./ls')(backend, options),

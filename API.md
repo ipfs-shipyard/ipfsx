@@ -163,7 +163,7 @@ Put a block into the IPFS block store.
 |------|------|-------------|
 | data | `Buffer`\|[`Block`](https://www.npmjs.com/package/ipfs-block)\|`Iterable`\|`Iterator` | Block data or block itself to store |
 | options | `Object` | (optional) options (ignored if `data` is a `Block`) |
-| options.cidCodec | `String` | [Multicodec name](https://github.com/multiformats/js-multicodec/blob/master/src/base-table.js) that describes the data, default: 'raw' |
+| options.format | `String` | [Multicodec name](https://github.com/multiformats/js-multicodec/blob/master/src/base-table.js) for the IPLD format that describes the data, default: 'raw' |
 | options.cidVersion | `Number` | Version number of the CID to return, default: 1 |
 | options.hashAlg | `String` | [Multihash hashing algorithm name](https://github.com/multiformats/js-multihash/blob/master/src/constants.js) to use, default: 'sha2-256' |
 | options.hashLen | `Number` | Length to truncate the digest to |
