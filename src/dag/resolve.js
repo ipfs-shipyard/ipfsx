@@ -12,8 +12,17 @@ module.exports = (backend, options) => {
     ? options.ipldFromats
     : [ipldDagPb, ipldDagCbor, ipldRaw]
 
+  // TODO: use backend.dag.tree when js-ipfs supports it
   return async (path, options) => {
     options = options || {}
+
+    if (Buffer.isBuffer(path)) {
+      try {
+        path = `/ipfs/${new CID(path)}`
+      } catch (err) {
+        throw explain(err, 'invalid path')
+      }
+    }
 
     if (CID.isCID(path)) path = `/ipfs/${path}`
     if (!isString(path)) throw new Error('invalid path')
@@ -44,22 +53,26 @@ module.exports = (backend, options) => {
     const format = formats.find(r => r.resolver.multicodec === cid.codec)
     if (!format) throw new Error(`missing IPLD format ${cid.codec}`)
 
-    const abort = new Promise((resolve, reject) => {
-      signal.onabort = () => reject(new Error('operation aborted'))
-    })
+    let resolved
 
-    const block = await Promise.race([abort, backend.block.get(cid)])
+    if (signal) {
+      const abort = new Promise((resolve, reject) => {
+        signal.onabort = () => reject(new Error('operation aborted'))
+      })
 
-    const { value, remainderPath } = await Promise.race([
-      abort,
-      formatResolve(format, block.data, path)
-    ])
-
-    if (!isLink(value)) {
-      return { cid, path: remainderPath }
+      const block = await Promise.race([abort, backend.block.get(cid)])
+      resolved = await Promise.race([abort, formatResolve(format, block.data, path)])
+    } else {
+      const block = await backend.block.get(cid)
+      resolved = await formatResolve(format, block.data, path)
     }
 
-    return resolve(getLinkCid(value), remainderPath, signal)
+    // If not a link, then it is a value within this node
+    if (!isLink(resolved.value)) {
+      return { cid, path }
+    }
+
+    return resolve(getLinkCid(resolved.value), resolved.remainderPath, signal)
   }
 }
 

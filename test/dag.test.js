@@ -87,3 +87,136 @@ test('should put with a non-default hash algorithm', async t => {
   t.true(CID.isCID(cid))
   t.is(Multihash.decode(cid.multihash).name, 'sha1')
 })
+
+test('should resolve from path', async t => {
+  const { node } = t.context
+  const data = randomBytes(randomInteger(1, 256))
+  const cid = await node.dag.put(data).first()
+  const res = await node.dag.resolve(`/ipfs/${cid}`)
+  t.true(res.cid.equals(cid))
+  t.falsy(res.path)
+})
+
+test('should resolve to CID from multi node traversing path', async t => {
+  const { node } = t.context
+
+  const leaf = await (() => {
+    const data = randomBytes(randomInteger(1, 256))
+    return node.dag.put(data, { format: 'raw' }).first()
+  })()
+
+  const mid = await (() => {
+    const data = {
+      now: Date.now(),
+      toLeaf: leaf
+    }
+    return node.dag.put(data, { format: 'dag-cbor' }).first()
+  })()
+
+  const root = await (() => {
+    const data = {
+      i: randomInteger(1, 1138),
+      nested: {
+        toMid: mid
+      }
+    }
+    return node.dag.put(data, { format: 'dag-cbor' }).first()
+  })()
+
+  const res = await node.dag.resolve(`/ipfs/${root}/nested/toMid/toLeaf`)
+  t.true(res.cid.equals(leaf))
+  t.falsy(res.path)
+})
+
+test('should resolve to CID and path from multi node traversing path', async t => {
+  const { node } = t.context
+
+  const leaf = await (() => {
+    const data = randomBytes(randomInteger(1, 256))
+    return node.dag.put(data, { format: 'raw' }).first()
+  })()
+
+  const root = await (() => {
+    const data = {
+      now: Date.now(),
+      nested: {
+        toLeaf: leaf
+      }
+    }
+    return node.dag.put(data, { format: 'dag-cbor' }).first()
+  })()
+
+  const res = await node.dag.resolve(`/ipfs/${root}/nested`)
+  t.true(res.cid.equals(root))
+  t.is(res.path, 'nested')
+})
+
+test('should resolve from CID instance', async t => {
+  const { node } = t.context
+  const data = randomBytes(randomInteger(1, 256))
+  const cid = await node.dag.put(data).first()
+  const res = await node.dag.resolve(cid)
+  t.true(res.cid.equals(cid))
+  t.falsy(res.path)
+})
+
+test('should resolve from CID buffer', async t => {
+  const { node } = t.context
+  const data = randomBytes(randomInteger(1, 256))
+  const cid = await node.dag.put(data).first()
+  const res = await node.dag.resolve(cid.buffer)
+  t.true(res.cid.equals(cid))
+  t.falsy(res.path)
+})
+
+test('should get from path', async t => {
+  const { node } = t.context
+  const data = randomBytes(randomInteger(1, 256))
+  const cid = await node.dag.put(data).first()
+  const res = await node.dag.get(`/ipfs/${cid}`)
+  t.deepEqual(res, data)
+})
+
+test('should get local value from path', async t => {
+  const { node } = t.context
+  const data = { now: Date.now(), nested: { value: 5 } }
+  const cid = await node.dag.put(data, { format: 'dag-cbor' }).first()
+  const res = await node.dag.get(`/ipfs/${cid}/nested/value`)
+  t.deepEqual(res, data.nested.value)
+})
+
+test('should get from multi node traversing path', async t => {
+  const { node } = t.context
+
+  const leafData = randomBytes(randomInteger(1, 256))
+  const leaf = await node.dag.put(leafData, { format: 'raw' }).first()
+
+  const root = await (() => {
+    const data = {
+      now: Date.now(),
+      nested: {
+        toLeaf: leaf
+      }
+    }
+    return node.dag.put(data, { format: 'dag-cbor' }).first()
+  })()
+
+  const res = await node.dag.get(`/ipfs/${root}/nested/toLeaf`)
+  t.deepEqual(res, leafData)
+})
+
+test('should get from CID instance', async t => {
+  const { node } = t.context
+  const data = randomBytes(randomInteger(1, 256))
+  const cid = await node.dag.put(data).first()
+  const res = await node.dag.get(cid)
+  t.deepEqual(res, data)
+})
+
+test('should get from CID buffer', async t => {
+  const { node } = t.context
+  const data = randomBytes(randomInteger(1, 256))
+  const cid = await node.dag.put(data).first()
+  const res = await node.dag.get(cid.buffer)
+  t.deepEqual(res, data)
+})

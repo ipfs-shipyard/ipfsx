@@ -9,8 +9,10 @@
     "test:portservice": "node test/helpers/port-service/bin",
     "test:runner": "run-s test:runner:embedded",
     "test:runner:embedded": "ava --verbose",
-    "test:runner:daemon": "IPFS_TYPE=go-daemon ava --verbose",
-    "coverage": "nyc --reporter=lcov --reporter=text ava --verbose"
+    "test:runner:daemon:go": "IPFS_TYPE=go-daemon ava --verbose",
+    "test:runner:daemon:js": "IPFS_TYPE=js-daemon ava --verbose",
+    "coverage": "npm run lint && run-p --race test:portservice coverage:runner",
+    "coverage:runner": "nyc --reporter=lcov --reporter=text ava --verbose"
   },
   "author": "Alan Shaw",
   "license": "MIT",

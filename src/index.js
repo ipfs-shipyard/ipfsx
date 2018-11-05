@@ -11,6 +11,7 @@ module.exports = async (backend, options) => {
     cat: require('./cat')(backend, options),
     cp: require('./cp')(backend, options),
     dag: {
+      get: require('./dag/get')(backend, options),
       put: require('./dag/put')(backend, options),
       resolve: require('./dag/resolve')(backend, options)
     },
