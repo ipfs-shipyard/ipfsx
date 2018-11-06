@@ -7,6 +7,9 @@
 * [`block.stat`](#blockstat)
 * [`cat`](#cat)
 * [`cp`](#cp) <sup>(MFS)</sup>
+* [`dag.get`](#dagget)
+* [`dag.put`](#dagput)
+* [`dag.resolve`](#dagresolve)
 * [`get`](#get)
 * [`id`](#id)
 * [`ls`](#ls) <sup>(MFS)</sup>
@@ -24,13 +27,15 @@
 
 Create a new ipfsx node, that uses an `interface-ipfs-core` compatible `backend`.
 
-### `ipfsx(backend)`
+### `ipfsx(backend, [options])`
 
 #### Parameters
 
 | Name | Type | Description |
 |------|------|-------------|
 | backend | `Ipfs`\|`IpfsApi` | Backing ipfs core interface to use |
+| options | `Object` | (optional) options |
+| options.ipldFormats | `Array` | IPLD formats for use with the DAG API. Default [ipld-raw](https://github.com/ipld/js-ipld-raw), [ipld-dag-pb](https://github.com/ipld/js-ipld-dag-pb), and [ipld-dag-cbor](https://github.com/ipld/js-ipld-dag-cbor). Note that setting this value with override the defaults. |
 
 #### Returns
 
@@ -333,9 +338,52 @@ Copy IPFS path to MFS:
 await node.cp('/ipfs/QmWGeRAEgtsHW3ec7U4qW2CyVy7eA2mFRVbk1nb24jFyks', '/hello-world.txt')
 ```
 
+## dag.get
+
+Retrieve data from an IPLD format node.
+
+### `node.dag.get(path, [options])`
+
+#### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| path | `String`\|[`CID`](https://www.npmjs.com/package/cids)\|`Buffer` | IPFS path to the data that should be retrieved. Can also optionally be a CID instance or a Buffer containing an encoded CID |
+| options | `Object` | (optional) options |
+| options.signal | [`AbortSignal`](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal) | A signal that can be used to abort the request |
+
+#### Returns
+
+| Type | Description |
+|------|-------------|
+| ? | The data in the node for the given path. |
+
+#### Example
+
+```js
+const { cid } = await node.add([
+  { content: 'hello world!', path: 'test/file1.txt' },
+  { content: 'hello IPFS!', path: 'test/file2.txt' }
+], { wrapWithDirectory: true }).last()
+
+// node.add creates content with IPLD format dag-pb
+// The dag-pb resolver returns DAGNode instances, see:
+// https://github.com/ipld/js-ipld-dag-pb
+const file1 = await node.dag.get(`/ipfs/${cid}/test/file1.txt`)
+console.log(file1.data.toString()) // hello world!
+
+const file2 = await node.dag.get(`/ipfs/${cid}/test/file2.txt`)
+console.log(file2.data.toString()) // hello IPFS!
+```
+
 ## get
 
 Get file or directory contents.
+
+#### Returns
+
+| Type | Description |
+|------|-------------|
 
 ### `node.get(path)`
 
