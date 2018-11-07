@@ -464,6 +464,42 @@ const apples = await node.dag.get(`/ipfs/${basketCid}/items/apples`)
 console.log(apples) // 5
 ```
 
+## dag.resolve
+
+Resolve an IPFS path to the CID of the DAG node that contains the data and the path within that node to the data (if any).
+
+### `node.dag.resolve(path, [options])`
+
+#### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| path | `String`\|[`CID`](https://www.npmjs.com/package/cids)\|`Buffer` | IPFS path to resolve. Can also optionally be a CID instance or a Buffer containing an encoded CID |
+| options | `Object` | (optional) options |
+| options.signal | [`AbortSignal`](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal) | A signal that can be used to abort the request |
+
+#### Returns
+
+| Type | Description |
+|------|-------------|
+| `Promise<{ cid<`[`CID`](https://www.npmjs.com/package/cids)`>, path<String>}>` | CID of the DAG node that contains the data and the path within that node to the data (if any). |
+
+#### Example
+
+```js
+const itemsCid = await node.dag.put(
+  { apples: { count: 5 }, pears: { count: 2 } },
+  { format: 'dag-cbor' }
+).first()
+const basketCid = await node.dag.put({ items: itemsCid }, { format: 'dag-cbor' }).first()
+
+const res = await node.dag.resolve(`/ipfs/${basketCid}/items/apples/count`)
+
+console.log(res.cid.equals(itemsCid)) // true
+console.log(`/ipfs/${res.cid}/${res.path}`)
+// /ipfs/zdpuAqpAePJ59hkzjUZQQZysi9fPSGpPcSUUuz62TgCTLD5tb/apples/count
+```
+
 ## get
 
 Get file or directory contents.
