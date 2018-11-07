@@ -103,6 +103,20 @@ Changed from 0 to 1. This will soon be the default for all new content added to 
 
 This makes adding multiple blocks significantly easier and allows us to easily integrate with [`js-unixfsv2-draft`](https://github.com/mikeal/js-unixfsv2-draft).
 
+## `dag.put`
+
+### CID codec default value
+
+The default value for CID codec is changed from `dag-pb` to `raw`. This is to encourage users of the API to add correctly formed data.
+
+### Iterator input
+
+This makes adding multiple DAG nodes significantly easier.
+
+## `dag.resolve`
+
+Now exists and will work with an embedded JS node or when talking to the daemon via the API.
+
 ## `mkdir` & `cp`
 
 ### No format or hashAlg options
