@@ -166,7 +166,7 @@ Put a block into the IPFS block store.
 
 | Name | Type | Description |
 |------|------|-------------|
-| data | `Buffer`\|[`Block`](https://www.npmjs.com/package/ipfs-block)\|`Iterable`\|`Iterator` | Block data or block itself to store |
+| data | `Buffer`\|[`Block`](https://www.npmjs.com/package/ipfs-block)\|`Iterable`\|`Iterator` | Block data to store (multiple blocks if iterable/iterator) |
 | options | `Object` | (optional) options (ignored if `data` is a `Block`) |
 | options.format | `String` | [Multicodec name](https://github.com/multiformats/js-multicodec/blob/master/src/base-table.js) for the IPLD format that describes the data, default: 'raw' |
 | options.cidVersion | `Number` | Version number of the CID to return, default: 1 |
@@ -356,7 +356,7 @@ Retrieve data from an IPLD format node.
 
 | Type | Description |
 |------|-------------|
-| ? | The data in the node for the given path. |
+| `Promise<?>` | The data in the node for the given path. |
 
 #### Example
 
@@ -374,6 +374,94 @@ console.log(file1.data.toString()) // hello world!
 
 const file2 = await node.dag.get(`/ipfs/${cid}/test/file2.txt`)
 console.log(file2.data.toString()) // hello IPFS!
+```
+
+Traversing linked ndoes:
+
+```js
+const itemsCid = await node.dag.put({ apples: 5, pears: 2 }, { format: 'dag-cbor' }).first()
+const basketCid = await node.dag.put({ items: itemsCid }, { format: 'dag-cbor' }).first()
+
+const basket = await node.dag.get(`/ipfs/${basketCid}`)
+console.log(basket) // { items: CID<zdpuAzD1F5ttkuXKHE9a2rcMCRdurmSzfmk9HFrz69dRm3YMd> }
+
+const items = await node.dag.get(`/ipfs/${basketCid}/items`)
+console.log(items) // { pears: 2, apples: 5 }
+
+const apples = await node.dag.get(`/ipfs/${basketCid}/items/apples`)
+console.log(apples) // 5
+```
+
+## dag.put
+
+Store an IPLD format node.
+
+### `node.dag.put(input, [options])`
+
+#### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| input | `?`\|`Iterable`\|`Iterator` | Data for DAG node to store (multiple nodes if iterable/iterator) |
+| options | `Object` | (optional) options |
+| options.format | `String` | [Multicodec name](https://github.com/multiformats/js-multicodec/blob/master/src/base-table.js) for the IPLD format that describes the data, default: 'raw' |
+| options.hashAlg | `String` | [Multihash hashing algorithm name](https://github.com/multiformats/js-multihash/blob/master/src/constants.js) to use, default: 'sha2-256' |
+
+#### Returns
+
+| Type | Description |
+|------|-------------|
+| `Iterator<`[`CID`](https://www.npmjs.com/package/cids)`>` | Iterator that yields CID objects. It has an async `first()` and `last()` function for returning just the first/last item. |
+
+#### Example
+
+Store a `raw` DAG node:
+
+```js
+const cid = await node.dag.put(Buffer.from('Hello World!')).first()
+console.log(cid.toString())
+```
+
+Store multiple DAG nodes from iterable (or async iterable):
+
+```js
+const iterable = [
+  Buffer.from('Hello World!'),
+  Buffer.from('Nice to meet ya!')
+]
+
+for await (const cid of node.dag.put(iterable)) {
+  console.log(cid.toString())
+}
+
+// zb2rhfE3SX3q7Ha6UErfMqQReKsmLn73BvdDRagHDM6X1eRFN
+// zb2rheUvNiPZtWauZfu2H1Kb64oRum1yuqkVLgMkD3j8nSCuX
+```
+
+Store with IPLD format `dag-cbor`:
+
+```js
+const cid = await node.dag.put({ msg: ['hello', 'world', '!'] }, { format: 'dag-cbor' }).first()
+console.log(cid.toString()) // zdpuAqiXL8e6RZj5PoittgkYQPvE3Y4APxXD4sSdXYfS3x7P8
+
+const msg0 = await node.dag.get(`/ipfs/${cid}/msg/0`)
+console.log(msg0) // hello
+```
+
+Linking `dag-cbor` nodes:
+
+```js
+const itemsCid = await node.dag.put({ apples: 5, pears: 2 }, { format: 'dag-cbor' }).first()
+const basketCid = await node.dag.put({ items: itemsCid }, { format: 'dag-cbor' }).first()
+
+const basket = await node.dag.get(`/ipfs/${basketCid}`)
+console.log(basket) // { items: CID<zdpuAzD1F5ttkuXKHE9a2rcMCRdurmSzfmk9HFrz69dRm3YMd> }
+
+const items = await node.dag.get(`/ipfs/${basketCid}/items`)
+console.log(items) // { pears: 2, apples: 5 }
+
+const apples = await node.dag.get(`/ipfs/${basketCid}/items/apples`)
+console.log(apples) // 5
 ```
 
 ## get

@@ -1,6 +1,6 @@
 # ipfsx
 
-[![Build Status](https://travis-ci.org/alanshaw/ipfsx.svg?branch=master)](https://travis-ci.org/alanshaw/ipfsx) [![dependencies Status](https://david-dm.org/alanshaw/ipfsx/status.svg)](https://david-dm.org/alanshaw/ipfsx)
+[![Build Status](https://travis-ci.org/ipfs-shipyard/ipfsx.svg?branch=master)](https://travis-ci.org/ipfs-shipyard/ipfsx) [![dependencies Status](https://david-dm.org/ipfs-shipyard/ipfsx/status.svg)](https://david-dm.org/ipfs-shipyard/ipfsx)
 
 > Experimental IPFS API
 
@@ -35,13 +35,13 @@ There's actually a bunch of other good reasons to switch to async/await and asyn
 * Simplifies the API, no `addPullStream`, `addReadableStream`.
 * Building an `interface-ipfs-core` compatible interface becomes a whole lot easier, no dual promise/callback API and no multiple stream implementation variations of the same function. It would also reduce the number of tests in the `interface-ipfs-core` test suite for the same reasons.
 * [Node.js readable streams are now async iterators](http://2ality.com/2018/04/async-iter-nodejs.html) thanks to [#17755](https://github.com/nodejs/node/pull/17755)!
-* Of note, it is trivial to convert from [pull stream to (async) iterator](https://github.com/alanshaw/pull-stream-to-async-iterator) and [vice versa](https://github.com/alanshaw/async-iterator-to-pull-stream).
+* Of note, it is trivial to convert from [pull stream to (async) iterator](https://github.com/ipfs-shipyard/pull-stream-to-async-iterator) and [vice versa](https://github.com/ipfs-shipyard/async-iterator-to-pull-stream).
 * Unhandled throws that cannot be caught will no longer be a problem
 * Better stack traces, stacks no longer clipped at async boundaries, [`await` stack traces better than promise stack traces](https://mathiasbynens.be/notes/async-stack-traces)
 
 Something for your consideration - async/await is inevitable for js-ipfs and js-ipfs-api, the CLI tests are already all promise based, when we inevitably upgrade to Hapi 17 the HTTP API will have to become promise based. The whole of the core interface is dual callback/promise based through `promisify`. Maybe it's time to double down on promises?
 
-Specific rationale for deviations from the `interface-ipfs-core` API is documented in [RATIONALE.md](https://github.com/alanshaw/ipfsx/blob/master/RATIONALE.md).
+Specific rationale for deviations from the `interface-ipfs-core` API is documented in [RATIONALE.md](https://github.com/ipfs-shipyard/ipfsx/blob/master/RATIONALE.md).
 
 ## Install
 
@@ -73,31 +73,34 @@ for await (const chunk of node.cat(cid)) {
 
 ## API
 
-* [Getting started](https://github.com/alanshaw/ipfsx/blob/master/API.md#getting-started)
-* [`add`](https://github.com/alanshaw/ipfsx/blob/master/API.md#add)
-* [`block.get`](https://github.com/alanshaw/ipfsx/blob/master/API.md#blockget)
-* [`block.put`](https://github.com/alanshaw/ipfsx/blob/master/API.md#blockput)
-* [`block.stat`](https://github.com/alanshaw/ipfsx/blob/master/API.md#blockstat)
-* [`cat`](https://github.com/alanshaw/ipfsx/blob/master/API.md#cat)
-* [`cp`](https://github.com/alanshaw/ipfsx/blob/master/API.md#cp) <sup>(MFS)</sup>
-* [`get`](https://github.com/alanshaw/ipfsx/blob/master/API.md#get)
-* [`id`](https://github.com/alanshaw/ipfsx/blob/master/API.md#id)
-* [`ls`](https://github.com/alanshaw/ipfsx/blob/master/API.md#ls) <sup>(MFS)</sup>
-* [`mkdir`](https://github.com/alanshaw/ipfsx/blob/master/API.md#mkdir) <sup>(MFS)</sup>
-* [`mv`](https://github.com/alanshaw/ipfsx/blob/master/API.md#mv) <sup>(MFS)</sup>
-* [`read`](https://github.com/alanshaw/ipfsx/blob/master/API.md#read) <sup>(MFS)</sup>
-* [`rm`](https://github.com/alanshaw/ipfsx/blob/master/API.md#rm) <sup>(MFS)</sup>
-* [`start`](https://github.com/alanshaw/ipfsx/blob/master/API.md#start)
-* [`stat`](https://github.com/alanshaw/ipfsx/blob/master/API.md#stat) <sup>(MFS)</sup>
-* [`stop`](https://github.com/alanshaw/ipfsx/blob/master/API.md#stop)
-* [`version`](https://github.com/alanshaw/ipfsx/blob/master/API.md#version)
-* [`write`](https://github.com/alanshaw/ipfsx/blob/master/API.md#write) <sup>(MFS)</sup>
+* [Getting started](https://github.com/ipfs-shipyard/ipfsx/blob/master/API.md#getting-started)
+* [`add`](https://github.com/ipfs-shipyard/ipfsx/blob/master/API.md#add)
+* [`block.get`](https://github.com/ipfs-shipyard/ipfsx/blob/master/API.md#blockget)
+* [`block.put`](https://github.com/ipfs-shipyard/ipfsx/blob/master/API.md#blockput)
+* [`block.stat`](https://github.com/ipfs-shipyard/ipfsx/blob/master/API.md#blockstat)
+* [`cat`](https://github.com/ipfs-shipyard/ipfsx/blob/master/API.md#cat)
+* [`cp`](https://github.com/ipfs-shipyard/ipfsx/blob/master/API.md#cp) <sup>(MFS)</sup>
+* [`dag.get`](https://github.com/ipfs-shipyard/ipfsx/blob/master/API.md#dagget)
+* [`dag.put`](https://github.com/ipfs-shipyard/ipfsx/blob/master/API.md#dagput)
+* [`dag.resolve`](https://github.com/ipfs-shipyard/ipfsx/blob/master/API.md#dagresolve)
+* [`get`](https://github.com/ipfs-shipyard/ipfsx/blob/master/API.md#get)
+* [`id`](https://github.com/ipfs-shipyard/ipfsx/blob/master/API.md#id)
+* [`ls`](https://github.com/ipfs-shipyard/ipfsx/blob/master/API.md#ls) <sup>(MFS)</sup>
+* [`mkdir`](https://github.com/ipfs-shipyard/ipfsx/blob/master/API.md#mkdir) <sup>(MFS)</sup>
+* [`mv`](https://github.com/ipfs-shipyard/ipfsx/blob/master/API.md#mv) <sup>(MFS)</sup>
+* [`read`](https://github.com/ipfs-shipyard/ipfsx/blob/master/API.md#read) <sup>(MFS)</sup>
+* [`rm`](https://github.com/ipfs-shipyard/ipfsx/blob/master/API.md#rm) <sup>(MFS)</sup>
+* [`start`](https://github.com/ipfs-shipyard/ipfsx/blob/master/API.md#start)
+* [`stat`](https://github.com/ipfs-shipyard/ipfsx/blob/master/API.md#stat) <sup>(MFS)</sup>
+* [`stop`](https://github.com/ipfs-shipyard/ipfsx/blob/master/API.md#stop)
+* [`version`](https://github.com/ipfs-shipyard/ipfsx/blob/master/API.md#version)
+* [`write`](https://github.com/ipfs-shipyard/ipfsx/blob/master/API.md#write) <sup>(MFS)</sup>
 * TODO: more to come in upcoming releases!
 
 ## Contribute
 
-Feel free to dive in! [Open an issue](https://github.com/alanshaw/ipfsx/issues/new) or submit PRs.
+Feel free to dive in! [Open an issue](https://github.com/ipfs-shipyard/ipfsx/issues/new) or submit PRs.
 
 ## License
 
-[MIT](LICENSE) © Alan Shaw
+[MIT](LICENSE) © Protocol Labs
