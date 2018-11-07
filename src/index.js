@@ -1,27 +1,32 @@
 const log = require('debug')('ipfsx')
 
-module.exports = async backend => {
+module.exports = async (backend, options) => {
   const api = {
-    add: require('./add')(backend),
+    add: require('./add')(backend, options),
     block: {
-      add: require('./block/get')(backend),
-      put: require('./block/put')(backend),
-      stat: require('./block/stat')(backend)
+      get: require('./block/get')(backend, options),
+      put: require('./block/put')(backend, options),
+      stat: require('./block/stat')(backend, options)
     },
-    cat: require('./cat')(backend),
-    cp: require('./cp')(backend),
-    get: require('./get')(backend),
-    id: require('./id')(backend),
-    ls: require('./ls')(backend),
-    mkdir: require('./mkdir')(backend),
-    mv: require('./mv')(backend),
-    read: require('./read')(backend),
-    rm: require('./rm')(backend),
-    start: require('./start')(backend),
-    stat: require('./stat')(backend),
-    stop: require('./stop')(backend),
-    version: require('./version')(backend),
-    write: require('./write')(backend)
+    cat: require('./cat')(backend, options),
+    cp: require('./cp')(backend, options),
+    dag: {
+      get: require('./dag/get')(backend, options),
+      put: require('./dag/put')(backend, options),
+      resolve: require('./dag/resolve')(backend, options)
+    },
+    get: require('./get')(backend, options),
+    id: require('./id')(backend, options),
+    ls: require('./ls')(backend, options),
+    mkdir: require('./mkdir')(backend, options),
+    mv: require('./mv')(backend, options),
+    read: require('./read')(backend, options),
+    rm: require('./rm')(backend, options),
+    start: require('./start')(backend, options),
+    stat: require('./stat')(backend, options),
+    stop: require('./stop')(backend, options),
+    version: require('./version')(backend, options),
+    write: require('./write')(backend, options)
   }
 
   // Backend is IpfsApi

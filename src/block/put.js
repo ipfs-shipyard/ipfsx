@@ -5,7 +5,7 @@ const { ends } = require('../util/iterator')
 
 module.exports = backend => {
   return function put (input, options) {
-    input = toInputIterator(input)
+    input = toInputIterable(input)
     if (options) log(options)
     options = options || {}
 
@@ -17,7 +17,7 @@ module.exports = backend => {
         } else {
           log('put', block)
           yield await backend.block.put(block, {
-            format: options.cidCodec || 'raw',
+            format: options.format || 'raw',
             version: options.cidVersion || 1,
             mhtype: options.hashAlg || 'sha2-256',
             mhlen: options.hashLen
@@ -30,19 +30,17 @@ module.exports = backend => {
   }
 }
 
-function toInputIterator (input) {
+function toInputIterable (input) {
   if (Buffer.isBuffer(input) || Block.isBlock(input)) {
     return (function * () { yield input })()
   }
 
   if (isIterator(input)) {
-    return input
+    return { [Symbol.asyncIterator]: () => input }
   }
 
   if (isIterable(input)) {
-    return input[Symbol.iterator]
-      ? input[Symbol.iterator]()
-      : input[Symbol.asyncIterator]()
+    return input
   }
 
   throw new Error('invalid input')

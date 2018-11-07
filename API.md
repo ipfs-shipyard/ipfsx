@@ -7,6 +7,9 @@
 * [`block.stat`](#blockstat)
 * [`cat`](#cat)
 * [`cp`](#cp) <sup>(MFS)</sup>
+* [`dag.get`](#dagget)
+* [`dag.put`](#dagput)
+* [`dag.resolve`](#dagresolve)
 * [`get`](#get)
 * [`id`](#id)
 * [`ls`](#ls) <sup>(MFS)</sup>
@@ -24,13 +27,15 @@
 
 Create a new ipfsx node, that uses an `interface-ipfs-core` compatible `backend`.
 
-### `ipfsx(backend)`
+### `ipfsx(backend, [options])`
 
 #### Parameters
 
 | Name | Type | Description |
 |------|------|-------------|
 | backend | `Ipfs`\|`IpfsApi` | Backing ipfs core interface to use |
+| options | `Object` | (optional) options |
+| options.ipldFormats | `Array` | IPLD formats for use with the DAG API. Default [ipld-raw](https://github.com/ipld/js-ipld-raw), [ipld-dag-pb](https://github.com/ipld/js-ipld-dag-pb), and [ipld-dag-cbor](https://github.com/ipld/js-ipld-dag-cbor). Note that setting this value with override the defaults. |
 
 #### Returns
 
@@ -161,9 +166,9 @@ Put a block into the IPFS block store.
 
 | Name | Type | Description |
 |------|------|-------------|
-| data | `Buffer`\|[`Block`](https://www.npmjs.com/package/ipfs-block)\|`Iterable`\|`Iterator` | Block data or block itself to store |
+| data | `Buffer`\|[`Block`](https://www.npmjs.com/package/ipfs-block)\|`Iterable`\|`Iterator` | Block data to store (multiple blocks if iterable/iterator) |
 | options | `Object` | (optional) options (ignored if `data` is a `Block`) |
-| options.cidCodec | `String` | [Multicodec name](https://github.com/multiformats/js-multicodec/blob/master/src/base-table.js) that describes the data, default: 'raw' |
+| options.format | `String` | [Multicodec name](https://github.com/multiformats/js-multicodec/blob/master/src/base-table.js) for the IPLD format that describes the data, default: 'raw' |
 | options.cidVersion | `Number` | Version number of the CID to return, default: 1 |
 | options.hashAlg | `String` | [Multihash hashing algorithm name](https://github.com/multiformats/js-multihash/blob/master/src/constants.js) to use, default: 'sha2-256' |
 | options.hashLen | `Number` | Length to truncate the digest to |
@@ -333,9 +338,176 @@ Copy IPFS path to MFS:
 await node.cp('/ipfs/QmWGeRAEgtsHW3ec7U4qW2CyVy7eA2mFRVbk1nb24jFyks', '/hello-world.txt')
 ```
 
+## dag.get
+
+Retrieve data from an IPLD format node.
+
+### `node.dag.get(path, [options])`
+
+#### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| path | `String`\|[`CID`](https://www.npmjs.com/package/cids)\|`Buffer` | IPFS path to the data that should be retrieved. Can also optionally be a CID instance or a Buffer containing an encoded CID |
+| options | `Object` | (optional) options |
+| options.signal | [`AbortSignal`](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal) | A signal that can be used to abort the request |
+
+#### Returns
+
+| Type | Description |
+|------|-------------|
+| `Promise<?>` | The data in the node for the given path. |
+
+#### Example
+
+```js
+const { cid } = await node.add([
+  { content: 'hello world!', path: 'test/file1.txt' },
+  { content: 'hello IPFS!', path: 'test/file2.txt' }
+], { wrapWithDirectory: true }).last()
+
+// node.add creates content with IPLD format dag-pb
+// The dag-pb resolver returns DAGNode instances, see:
+// https://github.com/ipld/js-ipld-dag-pb
+const file1 = await node.dag.get(`/ipfs/${cid}/test/file1.txt`)
+console.log(file1.data.toString()) // hello world!
+
+const file2 = await node.dag.get(`/ipfs/${cid}/test/file2.txt`)
+console.log(file2.data.toString()) // hello IPFS!
+```
+
+Traversing linked ndoes:
+
+```js
+const itemsCid = await node.dag.put({ apples: 5, pears: 2 }, { format: 'dag-cbor' }).first()
+const basketCid = await node.dag.put({ items: itemsCid }, { format: 'dag-cbor' }).first()
+
+const basket = await node.dag.get(`/ipfs/${basketCid}`)
+console.log(basket) // { items: CID<zdpuAzD1F5ttkuXKHE9a2rcMCRdurmSzfmk9HFrz69dRm3YMd> }
+
+const items = await node.dag.get(`/ipfs/${basketCid}/items`)
+console.log(items) // { pears: 2, apples: 5 }
+
+const apples = await node.dag.get(`/ipfs/${basketCid}/items/apples`)
+console.log(apples) // 5
+```
+
+## dag.put
+
+Store an IPLD format node.
+
+### `node.dag.put(input, [options])`
+
+#### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| input | `?`\|`Iterable`\|`Iterator` | Data for DAG node to store (multiple nodes if iterable/iterator) |
+| options | `Object` | (optional) options |
+| options.format | `String` | [Multicodec name](https://github.com/multiformats/js-multicodec/blob/master/src/base-table.js) for the IPLD format that describes the data, default: 'raw' |
+| options.hashAlg | `String` | [Multihash hashing algorithm name](https://github.com/multiformats/js-multihash/blob/master/src/constants.js) to use, default: 'sha2-256' |
+
+#### Returns
+
+| Type | Description |
+|------|-------------|
+| `Iterator<`[`CID`](https://www.npmjs.com/package/cids)`>` | Iterator that yields CID objects. It has an async `first()` and `last()` function for returning just the first/last item. |
+
+#### Example
+
+Store a `raw` DAG node:
+
+```js
+const cid = await node.dag.put(Buffer.from('Hello World!')).first()
+console.log(cid.toString())
+```
+
+Store multiple DAG nodes from iterable (or async iterable):
+
+```js
+const iterable = [
+  Buffer.from('Hello World!'),
+  Buffer.from('Nice to meet ya!')
+]
+
+for await (const cid of node.dag.put(iterable)) {
+  console.log(cid.toString())
+}
+
+// zb2rhfE3SX3q7Ha6UErfMqQReKsmLn73BvdDRagHDM6X1eRFN
+// zb2rheUvNiPZtWauZfu2H1Kb64oRum1yuqkVLgMkD3j8nSCuX
+```
+
+Store with IPLD format `dag-cbor`:
+
+```js
+const cid = await node.dag.put({ msg: ['hello', 'world', '!'] }, { format: 'dag-cbor' }).first()
+console.log(cid.toString()) // zdpuAqiXL8e6RZj5PoittgkYQPvE3Y4APxXD4sSdXYfS3x7P8
+
+const msg0 = await node.dag.get(`/ipfs/${cid}/msg/0`)
+console.log(msg0) // hello
+```
+
+Linking `dag-cbor` nodes:
+
+```js
+const itemsCid = await node.dag.put({ apples: 5, pears: 2 }, { format: 'dag-cbor' }).first()
+const basketCid = await node.dag.put({ items: itemsCid }, { format: 'dag-cbor' }).first()
+
+const basket = await node.dag.get(`/ipfs/${basketCid}`)
+console.log(basket) // { items: CID<zdpuAzD1F5ttkuXKHE9a2rcMCRdurmSzfmk9HFrz69dRm3YMd> }
+
+const items = await node.dag.get(`/ipfs/${basketCid}/items`)
+console.log(items) // { pears: 2, apples: 5 }
+
+const apples = await node.dag.get(`/ipfs/${basketCid}/items/apples`)
+console.log(apples) // 5
+```
+
+## dag.resolve
+
+Resolve an IPFS path to the CID of the DAG node that contains the data and the path within that node to the data (if any).
+
+### `node.dag.resolve(path, [options])`
+
+#### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| path | `String`\|[`CID`](https://www.npmjs.com/package/cids)\|`Buffer` | IPFS path to resolve. Can also optionally be a CID instance or a Buffer containing an encoded CID |
+| options | `Object` | (optional) options |
+| options.signal | [`AbortSignal`](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal) | A signal that can be used to abort the request |
+
+#### Returns
+
+| Type | Description |
+|------|-------------|
+| `Promise<{ cid<`[`CID`](https://www.npmjs.com/package/cids)`>, path<String>}>` | CID of the DAG node that contains the data and the path within that node to the data (if any). |
+
+#### Example
+
+```js
+const itemsCid = await node.dag.put(
+  { apples: { count: 5 }, pears: { count: 2 } },
+  { format: 'dag-cbor' }
+).first()
+const basketCid = await node.dag.put({ items: itemsCid }, { format: 'dag-cbor' }).first()
+
+const res = await node.dag.resolve(`/ipfs/${basketCid}/items/apples/count`)
+
+console.log(res.cid.equals(itemsCid)) // true
+console.log(`/ipfs/${res.cid}/${res.path}`)
+// /ipfs/zdpuAqpAePJ59hkzjUZQQZysi9fPSGpPcSUUuz62TgCTLD5tb/apples/count
+```
+
 ## get
 
 Get file or directory contents.
+
+#### Returns
+
+| Type | Description |
+|------|-------------|
 
 ### `node.get(path)`
 

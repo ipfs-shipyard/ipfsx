@@ -13,7 +13,7 @@ test.after.always(t => t.context.node.stop())
 test('should put from buffer', async t => {
   const { node } = t.context
   const data = randomBytes(randomInteger(1, 256))
-  const block = await node.block.put(data, { cidCodec: 'raw' }).last()
+  const block = await node.block.put(data, { format: 'raw' }).last()
   t.true(Block.isBlock(block))
   t.deepEqual(block.data, data)
 })
@@ -39,10 +39,26 @@ test('should put from iterator of buffer', async t => {
   const data = randomArray(1, 100, () => randomBytes(randomInteger(1, 64)))
   let i = 0
 
-  for await (const block of node.block.put(data, { cidCodec: 'raw' })) {
+  for await (const block of node.block.put(data, { format: 'raw' })) {
     t.true(Block.isBlock(block))
     t.deepEqual(block.data, data[i])
     t.is(block.cid.codec, 'raw')
     i++
   }
+})
+
+test('should get block', async t => {
+  const { node } = t.context
+  const data = randomBytes(randomInteger(1, 256))
+  let block = await node.block.put(data, { format: 'raw' }).last()
+  block = await node.block.get(block.cid)
+  t.deepEqual(block.data, data)
+})
+
+test('should get block stats', async t => {
+  const { node } = t.context
+  const data = randomBytes(randomInteger(1, 256))
+  const block = await node.block.put(data, { format: 'raw' }).last()
+  const { size } = await node.block.stat(block.cid)
+  t.deepEqual(size, data.length)
 })
